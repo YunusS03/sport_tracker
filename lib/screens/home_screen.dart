@@ -10,26 +10,34 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SportTracker'),
+        title: const Text(
+          'SportTracker',
+          style: TextStyle(
+            fontFamily: 'Montserrat', // Use a fitness-themed font
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue, // Customize the app bar color
+        centerTitle: true,
+        // Add an icon or logo related to fitness here if desired
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings), // Add a settings icon
+            onPressed: () {
+              // Implement settings functionality
+            },
+          ),
+        ],
       ),
-      body: Consumer<ActivityProvider>(
-        builder: (context, activityProvider, _) {
-          final List<Activity> activities = activityProvider.activities;
-          final Map<String, List<Activity>> activitiesByWeek = _groupActivitiesByWeek(activities);
-          final Map<String, List<Activity>> activitiesByMonth = _groupActivitiesByMonth(activities);
-          final Map<String, List<Activity>> activitiesByYear = _groupActivitiesByYear(activities);
-
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildGroupedActivities(context, 'Deze week', activitiesByWeek),
-                _buildGroupedActivities(context, 'Deze maand', activitiesByMonth),
-                _buildGroupedActivities(context, 'Dit jaar', activitiesByYear),
-              ],
-            ),
-          );
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildGroupedActivities(context, 'Deze week', Provider.of<ActivityProvider>(context).activitiesByWeek),
+            _buildGroupedActivities(context, 'Deze maand', Provider.of<ActivityProvider>(context).activitiesByMonth),
+            _buildGroupedActivities(context, 'Dit jaar', Provider.of<ActivityProvider>(context).activitiesByYear),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -39,51 +47,9 @@ class HomeScreen extends StatelessWidget {
           );
         },
         child: Icon(Icons.add),
+        backgroundColor: Colors.green, // Customize the FAB color
       ),
     );
-  }
-
-  Map<String, List<Activity>> _groupActivitiesByWeek(List<Activity> activities) {
-    final Map<String, List<Activity>> groupedActivities = {};
-    activities.forEach((activity) {
-      final weekStartDate = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
-      final weekEndDate = weekStartDate.add(Duration(days: 6));
-      final weekKey = '${DateFormat('yyyy-MM-dd').format(weekStartDate)} - ${DateFormat('yyyy-MM-dd').format(weekEndDate)}';
-      if (activity.date.isAfter(weekStartDate.subtract(Duration(days: 1))) && activity.date.isBefore(weekEndDate.add(Duration(days: 1)))) {
-        if (groupedActivities.containsKey(weekKey)) {
-          groupedActivities[weekKey]!.add(activity);
-        } else {
-          groupedActivities[weekKey] = [activity];
-        }
-      }
-    });
-    return groupedActivities;
-  }
-
-  Map<String, List<Activity>> _groupActivitiesByMonth(List<Activity> activities) {
-    final Map<String, List<Activity>> groupedActivities = {};
-    activities.forEach((activity) {
-      final monthKey = DateFormat('yyyy-MM').format(activity.date);
-      if (groupedActivities.containsKey(monthKey)) {
-        groupedActivities[monthKey]!.add(activity);
-      } else {
-        groupedActivities[monthKey] = [activity];
-      }
-    });
-    return groupedActivities;
-  }
-
-  Map<String, List<Activity>> _groupActivitiesByYear(List<Activity> activities) {
-    final Map<String, List<Activity>> groupedActivities = {};
-    activities.forEach((activity) {
-      final yearKey = activity.date.year.toString();
-      if (groupedActivities.containsKey(yearKey)) {
-        groupedActivities[yearKey]!.add(activity);
-      } else {
-        groupedActivities[yearKey] = [activity];
-      }
-    });
-    return groupedActivities;
   }
 
   Widget _buildGroupedActivities(BuildContext context, String title, Map<String, List<Activity>> groupedActivities) {
@@ -103,15 +69,38 @@ class HomeScreen extends StatelessWidget {
           itemCount: groupedActivities.length,
           itemBuilder: (context, index) {
             final key = groupedActivities.keys.elementAt(index);
-            final activities = groupedActivities[key]!;
-            final totalDuration = activities.fold(Duration.zero, (prev, element) => prev + element.duration);
-            return ListTile(
-              title: Text(key),
-              subtitle: Text('Totaal duur: ${totalDuration.inMinutes} minuten'),
+            final activities = groupedActivities[key];
+
+            // Custom activity card design
+            return Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ListTile(
+                leading: Icon(
+                  Icons.directions_run, // Use an appropriate activity icon
+                  color: Colors.blue,
+                ),
+                title: Text(
+                  key,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final activity in activities!)
+                      Text(
+                        '${activity.type} • ${DateFormat('dd MMM').format(activity.date)} • ${activity.duration} min',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                  ],
+                ),
+                onTap: () {
+                  // Implement activity details screen
+                },
+              ),
             );
           },
         ),
-        Divider(),
       ],
     );
   }
