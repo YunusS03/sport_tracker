@@ -13,18 +13,18 @@ class HomeScreen extends StatelessWidget {
         title: Text(
           'SportTracker',
           style: TextStyle(
-            fontFamily: 'Montserrat', // Use a fitness-themed font
+            fontFamily: 'Montserrat', // Using a fitness-themed font
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue, // Customize the app bar color
+        backgroundColor: Colors.blue, // Customizing the app bar color
         centerTitle: true,
-        // Add an icon or logo related to fitness here if desired
+        // Adding a settings icon for configuration
         actions: [
           IconButton(
-            icon: Icon(Icons.settings), // Add a settings icon
+            icon: Icon(Icons.settings),
             onPressed: () {
-              // Implement settings functionality
+              // Implement settings functionality here
             },
           ),
         ],
@@ -33,9 +33,9 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildGroupedActivities(context, 'Deze week', Provider.of<ActivityProvider>(context).activitiesByWeek),
-            _buildGroupedActivities(context, 'Deze maand', Provider.of<ActivityProvider>(context).activitiesByMonth),
-            _buildGroupedActivities(context, 'Dit jaar', Provider.of<ActivityProvider>(context).activitiesByYear),
+            _buildGroupedActivities(context, 'This Week', Provider.of<ActivityProvider>(context).activitiesByWeek),
+            _buildGroupedActivities(context, 'This Month', Provider.of<ActivityProvider>(context).activitiesByMonth),
+            _buildGroupedActivities(context, 'This Year', Provider.of<ActivityProvider>(context).activitiesByYear),
           ],
         ),
       ),
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
           );
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.green, // Customize the FAB color
+        backgroundColor: Colors.green, // Customizing the FAB color
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -57,11 +57,11 @@ class HomeScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
-            label: 'Grafieken',
+            label: 'Charts',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
-            label: 'Plannen',
+            label: 'Plan',
           ),
         ],
         selectedItemColor: Colors.blue,
@@ -91,15 +91,12 @@ class HomeScreen extends StatelessWidget {
             final key = groupedActivities.keys.elementAt(index);
             final activities = groupedActivities[key];
 
-            // Custom activity card design
+            // Customizing activity card design
             return Card(
               elevation: 3,
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: ListTile(
-                leading: Icon(
-                  Icons.directions_run, // Use an appropriate activity icon
-                  color: Colors.blue,
-                ),
+                leading: _getActivityIcon(activities![0].type), // Using the icon of the first activity
                 title: Text(
                   key,
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -107,9 +104,9 @@ class HomeScreen extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (final activity in activities!)
+                    for (final activity in activities)
                       Text(
-                        '${activity.type} • ${DateFormat('dd MMM').format(activity.date)} • ${activity.duration} min',
+                        '${_getReadableActivityDescription(activity.type)} • ${DateFormat('dd MMM').format(activity.date)} • ${activity.duration.inMinutes} min',
                         style: TextStyle(fontSize: 14),
                       ),
                   ],
@@ -123,5 +120,37 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Icon _getActivityIcon(String activityType) {
+    switch (activityType.toLowerCase()) {
+      case 'running':
+        return Icon(Icons.directions_run, color: Colors.blue);
+      case 'cycling':
+        return Icon(Icons.directions_bike, color: Colors.green);
+      case 'swimming':
+        return Icon(Icons.pool, color: Colors.blueAccent);
+      case 'walking':
+        return Icon(Icons.directions_walk, color: Colors.orange);
+      default:
+        return Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
+    }
+  }
+
+  String _getReadableActivityDescription(String activityType) {
+    // Mapping activity types to human-readable descriptions
+    switch (activityType.toLowerCase()) {
+      case 'running':
+        return 'Running';
+      case 'cycling':
+        return 'Cycling';
+      case 'swimming':
+        return 'Swimming';
+      case 'walking':
+        return 'Walking';
+    // Add more activity types as needed
+      default:
+        return 'Other';
+    }
   }
 }
