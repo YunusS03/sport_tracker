@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'SportTracker',
           style: TextStyle(
             fontFamily: 'Montserrat', // Use a fitness-themed font
@@ -48,6 +48,26 @@ class HomeScreen extends StatelessWidget {
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.green, // Customize the FAB color
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            label: 'Grafieken',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Plannen',
+          ),
+        ],
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
       ),
     );
   }
