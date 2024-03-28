@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/activiteitenprovider.dart';
 import 'AddActivityScreen.dart';
 import 'ActivityDetailScreen.dart'; // Import the ActivityDetailScreen
@@ -101,21 +102,15 @@ class HomeScreen extends StatelessWidget {
                   key,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final activity in activities)
-                      Text(
-                        '${_getReadableActivityDescription(activity.type)} • ${DateFormat('dd MMM').format(activity.date)} • ${activity.duration.inMinutes} min',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                  ],
+                subtitle: Text(
+                  _getConsolidatedActivityDescription(activities), // Display consolidated activity description
+                  style: TextStyle(fontSize: 14),
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ActivityDetailScreen(groupKey: key),
+                      builder: (context) => ActivityDetailScreen(groupKey: key), // Pass the group key to detail screen
                     ),
                   );
                 },
@@ -125,6 +120,33 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _getConsolidatedActivityDescription(List<Activity> activities) {
+    Map<String, Duration> consolidatedActivities = {};
+
+    // Sum up durations for each activity type
+    for (final activity in activities) {
+      if (consolidatedActivities.containsKey(activity.type)) {
+        consolidatedActivities[activity.type] = consolidatedActivities[activity.type]! + activity.duration;
+      } else {
+        consolidatedActivities[activity.type] = activity.duration;
+      }
+    }
+
+    // Format consolidated activity description
+    String consolidatedDescription = '';
+    consolidatedActivities.forEach((type, duration) {
+      consolidatedDescription += '$type: ${_formatDuration(duration)}, ';
+    });
+
+    return consolidatedDescription.substring(0, consolidatedDescription.length - 2); // Remove trailing comma and space
+  }
+
+  String _formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    return '$hours u $minutes min';
   }
 
   Icon _getActivityIcon(String activityType) {
@@ -139,23 +161,6 @@ class HomeScreen extends StatelessWidget {
         return Icon(Icons.directions_walk, color: Colors.orange);
       default:
         return Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
-    }
-  }
-
-  String _getReadableActivityDescription(String activityType) {
-    // Mapping activity types to human-readable descriptions
-    switch (activityType.toLowerCase()) {
-      case 'running':
-        return 'Running';
-      case 'cycling':
-        return 'Cycling';
-      case 'swimming':
-        return 'Swimming';
-      case 'walking':
-        return 'Walking';
-    // Add more activity types as needed
-      default:
-        return 'Other';
     }
   }
 }
