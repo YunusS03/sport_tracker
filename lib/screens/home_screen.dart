@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/activiteitenprovider.dart';
-import 'AddActivityScreen.dart'; // Replace with your actual import
+import 'AddActivityScreen.dart';
+import 'ActivityDetailScreen.dart'; // Import the ActivityDetailScreen
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'SportTracker',
           style: TextStyle(
             fontFamily: 'Montserrat', // Using a fitness-themed font
@@ -50,7 +50,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.green, // Customizing the FAB color
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -112,7 +112,12 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  // Implement activity details screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityDetailScreen(groupKey: key),
+                    ),
+                  );
                 },
               ),
             );
