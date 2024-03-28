@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,7 @@ class HomeScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue[900], // Customizing the app bar color
+        backgroundColor: Colors.blue, // Customizing the app bar color
         centerTitle: true,
         // Adding a settings icon for configuration
         actions: [
@@ -35,13 +34,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Activities Overview',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
-              ),
-            ),
             _buildGroupedActivities(context, 'This Week', Provider.of<ActivityProvider>(context).activitiesByWeek),
             _buildGroupedActivities(context, 'This Month', Provider.of<ActivityProvider>(context).activitiesByMonth),
             _buildGroupedActivities(context, 'This Year', Provider.of<ActivityProvider>(context).activitiesByYear),
@@ -73,7 +65,7 @@ class HomeScreen extends StatelessWidget {
             label: 'Plan',
           ),
         ],
-        selectedItemColor: Colors.blue[900],
+        selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -86,66 +78,45 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           child: Text(
             title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        StaggeredGridView.countBuilder(
+        ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
           itemCount: groupedActivities.length,
-          itemBuilder: (BuildContext context, int index) {
+          itemBuilder: (context, index) {
             final key = groupedActivities.keys.elementAt(index);
             final activities = groupedActivities[key];
 
             // Customizing activity card design
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ActivityDetailScreen(groupKey: key), // Pass the group key to detail screen
-                  ),
-                );
-              },
-              child: Card(
-                elevation: 3,
-                margin: EdgeInsets.all(8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          _getActivityIcon(activities![0].type),
-                          SizedBox(width: 8),
-                          Text(
-                            key,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Divider(color: Colors.grey[300]), // Background separator
-                      SizedBox(height: 8),
-                      Text(
-                        _getConsolidatedActivityDescription(activities), // Display consolidated activity description
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
-                  ),
+            return Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ListTile(
+                leading: _getActivityIcon(activities![0].type), // Using the icon of the first activity
+                title: Text(
+                  key,
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
+                subtitle: Text(
+                  _getConsolidatedActivityDescription(activities), // Display consolidated activity description
+                  style: TextStyle(fontSize: 14),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityDetailScreen(groupKey: key), // Pass the group key to detail screen
+                    ),
+                  );
+                },
               ),
             );
           },
-          staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
         ),
       ],
     );
@@ -175,7 +146,7 @@ class HomeScreen extends StatelessWidget {
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    return '$hours h $minutes min';
+    return '$hours u $minutes min';
   }
 
   Icon _getActivityIcon(String activityType) {
