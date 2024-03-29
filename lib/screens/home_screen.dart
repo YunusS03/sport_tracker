@@ -63,13 +63,14 @@ class HomeScreen extends StatelessWidget {
             label: 'Plan',
           ),
         ],
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.grey,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: (index) {
           if (index == 1) {
             // Navigate to the chart screen when the chart button is tapped
+
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ActivityChartScreen()),

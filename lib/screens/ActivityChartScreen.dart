@@ -4,9 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:intl/intl.dart';
 
+import 'DetailedActivityScreen.dart';
+
 class ActivityChartScreen extends StatefulWidget {
   @override
   _ActivityChartScreenState createState() => _ActivityChartScreenState();
+
+
 }
 
 class _ActivityChartScreenState extends State<ActivityChartScreen> {
@@ -35,6 +39,39 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
             child: _buildChart(groupedActivities),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            label: 'Charts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Plan',
+          ),
+        ],
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        onTap: (index) {
+          if (index == 0) {
+            // Navigate to the home screen when the home button is tapped
+            Navigator.popUntil(context, ModalRoute.withName('/'));
+
+          } else if (index == 2) {
+            // Navigate to the detailed activity screen when the plan button is tapped
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => DetailedActivityScreen(activityType: '',)),
+            // );
+          }
+        },
       ),
     );
   }
@@ -65,22 +102,31 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
   }
 
   Widget _buildChart(Map<String, int> activities) {
-    return SfCircularChart(
-      title: ChartTitle(text: 'Activity Distribution by Type'),
-      legend: Legend(
-        isVisible: true,
-        overflowMode: LegendItemOverflowMode.wrap, // Wrap legend items if there's not enough space
-      ),
-      series: <CircularSeries<ActivityData, String>>[
-        DoughnutSeries<ActivityData, String>(
-          dataSource: _generateChartData(activities),
-          xValueMapper: (ActivityData data, _) => data.type, // Activity Type
-          yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
-          dataLabelSettings: DataLabelSettings(isVisible: true),
-          pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
+    if (activities.isEmpty) {
+      return const Center(
+        child: Text(
+          'No data available',
+          style: TextStyle(fontSize: 18),
         ),
-      ],
-    );
+      );
+    } else {
+      return SfCircularChart(
+        title: ChartTitle(text: 'Activity Distribution by Type'),
+        legend: Legend(
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode.wrap, // Wrap legend items if there's not enough space
+        ),
+        series: <CircularSeries<ActivityData, String>>[
+          DoughnutSeries<ActivityData, String>(
+            dataSource: _generateChartData(activities),
+            xValueMapper: (ActivityData data, _) => data.type, // Activity Type
+            yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
+            dataLabelSettings: DataLabelSettings(isVisible: true),
+            pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
+          ),
+        ],
+      );
+    }
   }
 
   List<Activity> _filterActivities(List<Activity> activities) {
@@ -117,7 +163,6 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
     });
     return groupedActivities;
   }
-
 
   List<ActivityData> _generateChartData(Map<String, int> activities) {
     List<ActivityData> data = [];

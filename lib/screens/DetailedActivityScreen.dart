@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 
+import 'ActivityChartScreen.dart';
+
 class DetailedActivityScreen extends StatelessWidget {
   final String activityType;
 
@@ -11,6 +13,49 @@ class DetailedActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Retrieve activities of the selected type from provider
     List<Activity> activities = Provider.of<ActivityProvider>(context).getActivitiesByType(activityType);
+
+    if (activities.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('$activityType Activities'),
+        ),
+        body: Center(
+          child: Text('No $activityType activities available'),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.show_chart),
+              label: 'Charts',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Plan',
+            ),
+          ],
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          onTap: (index) {
+            if (index == 0) {
+              // Navigate to the home screen when the home button is tapped
+              Navigator.pop(context);
+            } else if (index == 1) {
+              // Navigate to the chart screen when the chart button is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ActivityChartScreen()),
+              );
+            }
+          },
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -50,6 +95,38 @@ class DetailedActivityScreen extends StatelessWidget {
               ),
             ),
           );
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            label: 'Charts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Plan',
+          ),
+        ],
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: (index) {
+          if (index == 0) {
+            // Navigate to the home screen when the home button is tapped
+            Navigator.pop(context);
+          } else if (index == 1) {
+            // Navigate to the chart screen when the chart button is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ActivityChartScreen()),
+            );
+          }
         },
       ),
     );
