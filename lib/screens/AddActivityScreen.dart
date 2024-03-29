@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/activiteitenprovider.dart';
+import '../providers/activityProvider.dart';
 
 class AddActivityScreen extends StatefulWidget {
   @override
@@ -46,6 +46,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               },
               child: Text('Select Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
             ),
+            SizedBox(height: 20),
             DropdownButtonFormField(
               value: _selectedActivityType,
               onChanged: (String? value) {
@@ -61,19 +62,20 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               }).toList(),
               decoration: InputDecoration(labelText: 'Activity Type'),
             ),
+            SizedBox(height: 20),
             TextFormField(
               controller: _durationController,
               decoration: InputDecoration(labelText: 'Duration (minutes)'),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             Text(
               'Intensity:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(
                 5,
                     (index) => GestureDetector(
@@ -83,17 +85,19 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     });
                   },
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                    padding: const EdgeInsets.fromLTRB(10,10,10,10),
+                    width: 50,
+                    height: 50,
                     decoration: BoxDecoration(
                       border: Border.all(color: _selectedIntensity == index + 1 ? Colors.blue : Colors.grey),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                    child: Text(
-                      '${index + 1}',
-                      style: TextStyle(
-                        color: _selectedIntensity == index + 1 ? Colors.blue : Colors.black,
-                        fontWeight: _selectedIntensity == index + 1 ? FontWeight.bold : FontWeight.normal,
+                    child: Center(
+                      child: Text(
+                        '${index + 1}',
+                        style: TextStyle(
+                          color: _selectedIntensity == index + 1 ? Colors.blue : Colors.black,
+                          fontWeight: _selectedIntensity == index + 1 ? FontWeight.bold : FontWeight.normal,
+                        ),
                       ),
                     ),
                   ),

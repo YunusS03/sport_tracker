@@ -1,4 +1,4 @@
-import 'package:fitness_tracker/providers/activiteitenprovider.dart';
+import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:fitness_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
