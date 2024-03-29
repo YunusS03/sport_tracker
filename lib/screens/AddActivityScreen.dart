@@ -10,7 +10,8 @@ class AddActivityScreen extends StatefulWidget {
 }
 
 class _AddActivityScreenState extends State<AddActivityScreen> {
-  final TextEditingController _durationController = TextEditingController();
+  final TextEditingController _hoursController = TextEditingController();
+  final TextEditingController _minutesController = TextEditingController();
   int _selectedIntensity = 1; // Default intensity
 
   DateTime _selectedDate = DateTime.now();
@@ -32,12 +33,25 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     'Tennis',
     'Golf',
     'Surfing',
-    'Skiing',
     'Snowboarding',
     'Skateboarding',
     'Rock Climbing',
     'Other'
   ];
+
+  bool isNumeric(String? str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _hoursController.text = '1'; // Default value for hours
+    _minutesController.text = '0'; // Default value for minutes
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,21 +64,18 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () async {
-                final DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDate,
-                  firstDate: DateTime(2015, 8),
-                  lastDate: DateTime.now(),
-                );
-                if (pickedDate != null && pickedDate != _selectedDate) {
-                  setState(() {
-                    _selectedDate = pickedDate;
-                  });
-                }
-              },
-              child: Text('Select Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today_outlined), // Modern date picker icon
+                  SizedBox(width: 10),
+                  Text(
+                    'Select Date: ${DateFormat.yMMMd().format(_selectedDate)}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 20),
             DropdownButtonFormField(
@@ -77,19 +88,39 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               items: activityTypes.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Row(
+                    children: [
+                      _getActivityIcon(value), // Add icon here
+                      SizedBox(width: 10), // Adjust spacing between icon and text
+                      Text(value),
+                    ],
+                  ),
                 );
               }).toList(),
               decoration: InputDecoration(labelText: 'Activity Type'),
             ),
             SizedBox(height: 20),
-            TextFormField(
-              controller: _durationController,
-              decoration: InputDecoration(labelText: 'Duration (minutes)'),
-              keyboardType: TextInputType.number,
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _hoursController,
+                    decoration: InputDecoration(labelText: 'Hours'),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    controller: _minutesController,
+                    decoration: InputDecoration(labelText: 'Minutes'),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 20),
-            Text(
+            const Text(
               'Intensity:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -128,12 +159,14 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             ElevatedButton(
               onPressed: () {
                 final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
-                final int duration = int.tryParse(_durationController.text) ?? 0;
+                final int hours = int.tryParse(_hoursController.text) ?? 0;
+                final int minutes = int.tryParse(_minutesController.text) ?? 0;
+                final int totalMinutes = hours * 60 + minutes;
 
                 activityProvider.addActivity(Activity(
                   date: _selectedDate,
                   type: _selectedActivityType,
-                  duration: Duration(minutes: duration),
+                  duration: Duration(minutes: totalMinutes),
                   intensity: _selectedIntensity,
                 ));
 
@@ -145,5 +178,77 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         ),
       ),
     );
+  }
+
+  // Function to get activity icon based on activity type
+  Icon _getActivityIcon(String activityType) {
+    switch (activityType.toLowerCase()) {
+      case 'running':
+        return Icon(Icons.directions_run, color: Colors.blue);
+      case 'cycling':
+        return Icon(Icons.directions_bike, color: Colors.green);
+      case 'swimming':
+        return Icon(Icons.pool, color: Colors.blueAccent);
+      case 'walking':
+        return Icon(Icons.directions_walk, color: Colors.orange);
+      case 'hiking':
+        return Icon(Icons.terrain, color: Colors.brown);
+      case 'yoga':
+        return Icon(Icons.self_improvement, color: Colors.purple);
+      case 'weightlifting':
+        return Icon(Icons.fitness_center, color: Colors.red);
+      case 'pilates':
+        return Icon(Icons.spa, color: Colors.lightGreen);
+      case 'dancing':
+        return Icon(Icons.music_note, color: Colors.pink);
+      case 'basketball':
+        return Icon(Icons.sports_basketball, color: Colors.orange);
+      case 'soccer':
+        return Icon(Icons.sports_soccer, color: Colors.green);
+      case 'tennis':
+        return Icon(Icons.sports_tennis, color: Colors.blue);
+      case 'golf':
+        return Icon(Icons.sports_golf, color: Colors.yellow);
+      case 'surfing':
+        return Icon(Icons.surfing, color: Colors.lightBlue);
+      case 'snowboarding':
+        return Icon(Icons.snowboarding, color: Colors.indigo);
+      case 'skateboarding':
+        return Icon(Icons.skateboarding, color: Colors.deepOrange);
+      case 'rock climbing':
+        return Icon(Icons.explore, color: Colors.brown);
+      default:
+        return Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
+    }
+  }
+
+  // Function to show date picker dialog
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light().copyWith(
+              primary: Colors.blue, // Header background color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.blue, // Button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
   }
 }
