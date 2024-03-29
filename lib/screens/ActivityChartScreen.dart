@@ -1,0 +1,172 @@
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:provider/provider.dart';
+import 'package:fitness_tracker/providers/activityProvider.dart';
+import 'package:intl/intl.dart';
+
+class ActivityChartScreen extends StatefulWidget {
+  @override
+  _ActivityChartScreenState createState() => _ActivityChartScreenState();
+}
+
+class _ActivityChartScreenState extends State<ActivityChartScreen> {
+  String _selectedFilter = 'This Week';
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<ActivityProvider>(context);
+    final activities = provider.getAllActivities(); // Get all activities
+
+    // Filter activities based on selected filter
+    List<Activity> filteredActivities = _filterActivities(activities);
+
+    // Group activities by type
+    Map<String, int> groupedActivities = _groupActivities(filteredActivities);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Activity Charts'),
+      ),
+      body: Column(
+        children: [
+          _buildFilterButtons(),
+          SizedBox(height: 16),
+          Expanded(
+            child: _buildChart(groupedActivities),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildFilterButton('This Week'),
+        _buildFilterButton('This Month'),
+        _buildFilterButton('This Year'),
+      ],
+    );
+  }
+
+  Widget _buildFilterButton(String filter) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          _selectedFilter = filter;
+        });
+      },
+      child: Text(filter),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _selectedFilter == filter ? Colors.blue : null,
+      ),
+    );
+  }
+
+  Widget _buildChart(Map<String, int> activities) {
+    return SfCircularChart(
+      title: ChartTitle(text: 'Activity Distribution by Type'),
+      legend: Legend(
+        isVisible: true,
+        overflowMode: LegendItemOverflowMode.wrap, // Wrap legend items if there's not enough space
+      ),
+      series: <CircularSeries<ActivityData, String>>[
+        DoughnutSeries<ActivityData, String>(
+          dataSource: _generateChartData(activities),
+          xValueMapper: (ActivityData data, _) => data.type, // Activity Type
+          yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
+          dataLabelSettings: DataLabelSettings(isVisible: true),
+          pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
+        ),
+      ],
+    );
+  }
+
+  List<Activity> _filterActivities(List<Activity> activities) {
+    switch (_selectedFilter) {
+      case 'This Week':
+        return activities.where((activity) {
+          return DateTime.now().difference(activity.date).inDays <= 7;
+        }).toList();
+      case 'This Month':
+        final now = DateTime.now();
+        final startOfMonth = DateTime(now.year, now.month, 1);
+        return activities.where((activity) {
+          return activity.date.isAfter(startOfMonth);
+        }).toList();
+      case 'This Year':
+        final now = DateTime.now();
+        final startOfYear = DateTime(now.year, 1, 1);
+        return activities.where((activity) {
+          return activity.date.isAfter(startOfYear);
+        }).toList();
+      default:
+        return activities;
+    }
+  }
+
+  Map<String, int> _groupActivities(List<Activity> activities) {
+    Map<String, int> groupedActivities = {};
+    activities.forEach((activity) {
+      if (groupedActivities.containsKey(activity.type)) {
+        groupedActivities[activity.type] = (groupedActivities[activity.type] ?? 0) + activity.duration.inMinutes;
+      } else {
+        groupedActivities[activity.type] = activity.duration.inMinutes;
+      }
+    });
+    return groupedActivities;
+  }
+
+
+  List<ActivityData> _generateChartData(Map<String, int> activities) {
+    List<ActivityData> data = [];
+    int index = 0;
+    activities.forEach((type, duration) {
+      data.add(ActivityData(
+        type: type,
+        totalDuration: duration,
+        color: _getColor(index),
+      ));
+      index++;
+    });
+    return data;
+  }
+
+  Color? _getColor(int index) {
+    // Pastel color palette
+    List<Color?> colors = [
+      Colors.blue[200],
+      Colors.green[200],
+      Colors.blueAccent[100],
+      Colors.orange[200],
+      Colors.brown[200],
+      Colors.purple[200],
+      Colors.red[200],
+      Colors.lightGreen[200],
+      Colors.pink[200],
+      Colors.orange[200],
+      Colors.green[200],
+      Colors.blue[200],
+      Colors.yellow[200],
+      Colors.lightBlue[200],
+      Colors.indigo[200],
+      Colors.deepOrange[200],
+      Colors.brown[200],
+    ];
+    // If index exceeds the color palette, cycle back to the beginning
+    return colors[index % colors.length];
+  }
+}
+
+class ActivityData {
+  final String type;
+  final int totalDuration;
+  final Color? color;
+
+  ActivityData({
+    required this.type,
+    required this.totalDuration,
+    required this.color,
+  });
+}

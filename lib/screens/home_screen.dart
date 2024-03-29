@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:provider/provider.dart';
+import 'ActivityChartScreen.dart';
 import 'AddActivityScreen.dart';
 import 'DetailedActivityScreen.dart';
 
@@ -66,10 +67,18 @@ class HomeScreen extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        onTap: (index) {
+          if (index == 1) {
+            // Navigate to the chart screen when the chart button is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ActivityChartScreen()),
+            );
+          }
+        },
       ),
     );
   }
-
   Widget _buildGroupedActivities(BuildContext context, String title) {
     final provider = Provider.of<ActivityProvider>(context);
     Map<String, List<Activity>> groupedActivities = {};

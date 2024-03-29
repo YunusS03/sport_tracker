@@ -21,26 +21,33 @@ class DetailedActivityScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           // Build list item for each activity
           Activity activity = activities[index];
-          return ListTile(
-            title: Text('Date: ${activity.date} - Duration: ${activity.duration.inMinutes} minutes'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    // Navigate to edit activity screen
-                    // You can implement this based on your requirement
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    // Delete the activity
-                    Provider.of<ActivityProvider>(context, listen: false).removeActivity(activity.id!);
-                  },
-                ),
-              ],
+          return Card(
+            elevation: 4,
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ListTile(
+              title: Text(
+                'Date: ${activity.date}',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('Duration: ${activity.duration.inMinutes} minutes'),
+              trailing: Wrap(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      // Navigate to edit activity screen
+                      // You can implement this based on your requirement
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      // Delete the activity
+                      Provider.of<ActivityProvider>(context, listen: false).removeActivity(activity.id!);
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },
