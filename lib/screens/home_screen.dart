@@ -140,6 +140,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+
   Icon _getActivityIcon(String activityType) {
     switch (activityType.toLowerCase()) {
       case 'running':
@@ -150,8 +151,35 @@ class HomeScreen extends StatelessWidget {
         return Icon(Icons.pool, color: Colors.blueAccent);
       case 'walking':
         return Icon(Icons.directions_walk, color: Colors.orange);
+      case 'hiking':
+        return Icon(Icons.terrain, color: Colors.brown);
+      case 'yoga':
+        return Icon(Icons.self_improvement, color: Colors.purple);
+      case 'weightlifting':
+        return Icon(Icons.fitness_center, color: Colors.red);
+      case 'pilates':
+        return Icon(Icons.spa, color: Colors.lightGreen);
+      case 'dancing':
+        return Icon(Icons.music_note, color: Colors.pink);
+      case 'basketball':
+        return Icon(Icons.sports_basketball, color: Colors.orange);
+      case 'soccer':
+        return Icon(Icons.sports_soccer, color: Colors.green);
+      case 'tennis':
+        return Icon(Icons.sports_tennis, color: Colors.blue);
+      case 'golf':
+        return Icon(Icons.sports_golf, color: Colors.yellow);
+      case 'surfing':
+        return Icon(Icons.surfing, color: Colors.lightBlue);
+      case 'snowboarding':
+        return Icon(Icons.snowboarding, color: Colors.indigo);
+      case 'skateboarding':
+        return Icon(Icons.skateboarding, color: Colors.deepOrange);
+      case 'rock climbing':
+        return Icon(Icons.explore, color: Colors.brown);
       default:
         return Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
   }
+
 }

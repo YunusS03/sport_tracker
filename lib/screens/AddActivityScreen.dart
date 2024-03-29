@@ -17,7 +17,27 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   String _selectedActivityType = 'Running'; // Default activity type
 
   // List of predefined activity types
-  final List<String> activityTypes = ['Running', 'Cycling', 'Swimming', 'Walking', 'Other'];
+  final List<String> activityTypes = [
+    'Running',
+    'Cycling',
+    'Swimming',
+    'Walking',
+    'Hiking',
+    'Yoga',
+    'Weightlifting',
+    'Pilates',
+    'Dancing',
+    'Basketball',
+    'Soccer',
+    'Tennis',
+    'Golf',
+    'Surfing',
+    'Skiing',
+    'Snowboarding',
+    'Skateboarding',
+    'Rock Climbing',
+    'Other'
+  ];
 
   @override
   Widget build(BuildContext context) {
