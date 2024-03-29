@@ -11,7 +11,8 @@ class AddActivityScreen extends StatefulWidget {
 
 class _AddActivityScreenState extends State<AddActivityScreen> {
   final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _intensityController = TextEditingController();
+  int _selectedIntensity = 1; // Default intensity
+
   DateTime _selectedDate = DateTime.now();
   String _selectedActivityType = 'Running'; // Default activity type
 
@@ -65,23 +66,51 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               decoration: InputDecoration(labelText: 'Duration (minutes)'),
               keyboardType: TextInputType.number,
             ),
-            TextFormField(
-              controller: _intensityController,
-              decoration: InputDecoration(labelText: 'Intensity (1-5)'),
-              keyboardType: TextInputType.number,
+            SizedBox(height: 10),
+            Text(
+              'Intensity:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                5,
+                    (index) => GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedIntensity = index + 1;
+                    });
+                  },
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    padding: const EdgeInsets.fromLTRB(10,10,10,10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: _selectedIntensity == index + 1 ? Colors.blue : Colors.grey),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '${index + 1}',
+                      style: TextStyle(
+                        color: _selectedIntensity == index + 1 ? Colors.blue : Colors.black,
+                        fontWeight: _selectedIntensity == index + 1 ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
                 final int duration = int.tryParse(_durationController.text) ?? 0;
-                final int intensity = int.tryParse(_intensityController.text) ?? 0;
 
                 activityProvider.addActivity(Activity(
                   date: _selectedDate,
                   type: _selectedActivityType,
                   duration: Duration(minutes: duration),
-                  intensity: intensity,
+                  intensity: _selectedIntensity,
                 ));
 
                 Navigator.pop(context); // Go back to HomeScreen
