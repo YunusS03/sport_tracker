@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:provider/provider.dart';
 import 'AddActivityScreen.dart';
-import 'ActivityDetailScreen.dart';
+import 'DetailedActivityScreen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -129,9 +129,18 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     '${totalDuration.inHours} hours ${totalDuration.inMinutes.remainder(60)} minutes',
                     style: TextStyle(fontSize: 12),
-                  ),
+                  )
+                  ,
                 ],
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailedActivityScreen(activityType: activityType),
+                  ),
+                );
+              },
             );
           },
         ),
