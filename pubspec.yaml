@@ -45,6 +45,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   syncfusion_flutter_charts: ^21.2.4
 
+  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

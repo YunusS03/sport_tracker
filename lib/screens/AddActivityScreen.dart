@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/activityProvider.dart';
 
 class AddActivityScreen extends StatefulWidget {
+  const AddActivityScreen({super.key});
+
   @override
   _AddActivityScreenState createState() => _AddActivityScreenState();
 }
@@ -57,7 +59,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Activity'),
+        title: const Text('Add New Activity'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -68,16 +70,16 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               onTap: () => _selectDate(context),
               child: Row(
                 children: [
-                  Icon(Icons.calendar_today_outlined), // Modern date picker icon
-                  SizedBox(width: 10),
+                  const Icon(Icons.calendar_today_outlined), // Modern date picker icon
+                  const SizedBox(width: 10),
                   Text(
                     'Select Date: ${DateFormat.yMMMd().format(_selectedDate)}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             DropdownButtonFormField(
               value: _selectedActivityType,
               onChanged: (String? value) {
@@ -91,40 +93,40 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   child: Row(
                     children: [
                       _getActivityIcon(value), // Add icon here
-                      SizedBox(width: 10), // Adjust spacing between icon and text
+                      const SizedBox(width: 10), // Adjust spacing between icon and text
                       Text(value),
                     ],
                   ),
                 );
               }).toList(),
-              decoration: InputDecoration(labelText: 'Activity Type'),
+              decoration: const InputDecoration(labelText: 'Activity Type'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
                   child: TextFormField(
                     controller: _hoursController,
-                    decoration: InputDecoration(labelText: 'Hours'),
+                    decoration: const InputDecoration(labelText: 'Hours'),
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
                     controller: _minutesController,
-                    decoration: InputDecoration(labelText: 'Minutes'),
+                    decoration: const InputDecoration(labelText: 'Minutes'),
                     keyboardType: TextInputType.number,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Text(
               'Intensity:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(
@@ -155,7 +157,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
@@ -172,7 +174,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
                 Navigator.pop(context); // Go back to HomeScreen
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         ),
@@ -184,41 +186,41 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   Icon _getActivityIcon(String activityType) {
     switch (activityType.toLowerCase()) {
       case 'running':
-        return Icon(Icons.directions_run, color: Colors.blue);
+        return const Icon(Icons.directions_run, color: Colors.blue);
       case 'cycling':
-        return Icon(Icons.directions_bike, color: Colors.green);
+        return const Icon(Icons.directions_bike, color: Colors.green);
       case 'swimming':
-        return Icon(Icons.pool, color: Colors.blueAccent);
+        return const Icon(Icons.pool, color: Colors.blueAccent);
       case 'walking':
-        return Icon(Icons.directions_walk, color: Colors.orange);
+        return const Icon(Icons.directions_walk, color: Colors.orange);
       case 'hiking':
-        return Icon(Icons.terrain, color: Colors.brown);
+        return const Icon(Icons.terrain, color: Colors.brown);
       case 'yoga':
-        return Icon(Icons.self_improvement, color: Colors.purple);
+        return const Icon(Icons.self_improvement, color: Colors.purple);
       case 'weightlifting':
-        return Icon(Icons.fitness_center, color: Colors.red);
+        return const Icon(Icons.fitness_center, color: Colors.red);
       case 'pilates':
-        return Icon(Icons.spa, color: Colors.lightGreen);
+        return const Icon(Icons.spa, color: Colors.lightGreen);
       case 'dancing':
-        return Icon(Icons.music_note, color: Colors.pink);
+        return const Icon(Icons.music_note, color: Colors.pink);
       case 'basketball':
-        return Icon(Icons.sports_basketball, color: Colors.orange);
+        return const Icon(Icons.sports_basketball, color: Colors.orange);
       case 'soccer':
-        return Icon(Icons.sports_soccer, color: Colors.green);
+        return const Icon(Icons.sports_soccer, color: Colors.green);
       case 'tennis':
-        return Icon(Icons.sports_tennis, color: Colors.blue);
+        return const Icon(Icons.sports_tennis, color: Colors.blue);
       case 'golf':
-        return Icon(Icons.sports_golf, color: Colors.yellow);
+        return const Icon(Icons.sports_golf, color: Colors.yellow);
       case 'surfing':
-        return Icon(Icons.surfing, color: Colors.lightBlue);
+        return const Icon(Icons.surfing, color: Colors.lightBlue);
       case 'snowboarding':
-        return Icon(Icons.snowboarding, color: Colors.indigo);
+        return const Icon(Icons.snowboarding, color: Colors.indigo);
       case 'skateboarding':
-        return Icon(Icons.skateboarding, color: Colors.deepOrange);
+        return const Icon(Icons.skateboarding, color: Colors.deepOrange);
       case 'rock climbing':
-        return Icon(Icons.explore, color: Colors.brown);
+        return const Icon(Icons.explore, color: Colors.brown);
       default:
-        return Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
+        return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
   }
 
@@ -232,7 +234,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light().copyWith(
+            colorScheme: const ColorScheme.light().copyWith(
               primary: Colors.blue, // Header background color
             ),
             textButtonTheme: TextButtonThemeData(

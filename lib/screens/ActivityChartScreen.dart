@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
-import 'package:intl/intl.dart';
 
-import 'DetailedActivityScreen.dart';
 
 class ActivityChartScreen extends StatefulWidget {
+  const ActivityChartScreen({super.key});
+
   @override
   _ActivityChartScreenState createState() => _ActivityChartScreenState();
 
@@ -29,12 +29,12 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Activity Charts'),
+        title: const Text('Activity Charts'),
       ),
       body: Column(
         children: [
           _buildFilterButtons(),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Expanded(
             child: _buildChart(groupedActivities),
           ),
@@ -94,10 +94,10 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
           _selectedFilter = filter;
         });
       },
-      child: Text(filter),
       style: ElevatedButton.styleFrom(
         backgroundColor: _selectedFilter == filter ? Colors.blue : null,
       ),
+      child: Text(filter),
     );
   }
 
@@ -121,7 +121,7 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
             dataSource: _generateChartData(activities),
             xValueMapper: (ActivityData data, _) => data.type, // Activity Type
             yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
-            dataLabelSettings: DataLabelSettings(isVisible: true),
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
             pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
           ),
         ],
@@ -154,13 +154,13 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
 
   Map<String, int> _groupActivities(List<Activity> activities) {
     Map<String, int> groupedActivities = {};
-    activities.forEach((activity) {
+    for (var activity in activities) {
       if (groupedActivities.containsKey(activity.type)) {
         groupedActivities[activity.type] = (groupedActivities[activity.type] ?? 0) + activity.duration.inMinutes;
       } else {
         groupedActivities[activity.type] = activity.duration.inMinutes;
       }
-    });
+    }
     return groupedActivities;
   }
 

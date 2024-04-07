@@ -7,7 +7,7 @@ import 'ActivityChartScreen.dart';
 class DetailedActivityScreen extends StatelessWidget {
   final String activityType;
 
-  DetailedActivityScreen({required this.activityType});
+  const DetailedActivityScreen({super.key, required this.activityType});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class DetailedActivityScreen extends StatelessWidget {
               // Navigate to the chart screen when the chart button is tapped
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ActivityChartScreen()),
+                MaterialPageRoute(builder: (context) => const ActivityChartScreen()),
               );
             }
           },
@@ -68,24 +68,24 @@ class DetailedActivityScreen extends StatelessWidget {
           Activity activity = activities[index];
           return Card(
             elevation: 4,
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(
               title: Text(
                 'Date: ${activity.date}',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text('Duration: ${activity.duration.inMinutes} minutes'),
               trailing: Wrap(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                     onPressed: () {
                       // Navigate to edit activity screen
                       // You can implement this based on your requirement
                     },
                   ),
                   IconButton(
-                    icon: Icon(Icons.delete),
+                    icon: const Icon(Icons.delete),
                     onPressed: () {
                       // Delete the activity
                       Provider.of<ActivityProvider>(context, listen: false).removeActivity(activity.id!);
@@ -124,7 +124,7 @@ class DetailedActivityScreen extends StatelessWidget {
             // Navigate to the chart screen when the chart button is tapped
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ActivityChartScreen()),
+              MaterialPageRoute(builder: (context) => const ActivityChartScreen()),
             );
           }
         },

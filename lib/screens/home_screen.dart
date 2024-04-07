@@ -6,6 +6,8 @@ import 'AddActivityScreen.dart';
 import 'DetailedActivityScreen.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               // Implement settings functionality here
             },
@@ -42,11 +44,11 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AddActivityScreen()),
+            MaterialPageRoute(builder: (context) => const AddActivityScreen()),
           );
         },
-        child: Icon(Icons.add),
         backgroundColor: Colors.green,
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -73,7 +75,7 @@ class HomeScreen extends StatelessWidget {
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ActivityChartScreen()),
+              MaterialPageRoute(builder: (context) => const ActivityChartScreen()),
             );
           }
         },
@@ -111,7 +113,7 @@ class HomeScreen extends StatelessWidget {
         ),
         ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: groupedActivities.length,
           itemBuilder: (context, index) {
             final activityType = groupedActivities.keys.elementAt(index);
@@ -134,11 +136,11 @@ class HomeScreen extends StatelessWidget {
                   LinearProgressIndicator(
                     value: progress,
                     backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                   Text(
                     '${totalDuration.inHours} hours ${totalDuration.inMinutes.remainder(60)} minutes',
-                    style: TextStyle(fontSize: 12),
+                    style: const TextStyle(fontSize: 12),
                   )
                   ,
                 ],
@@ -154,7 +156,7 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -163,41 +165,41 @@ class HomeScreen extends StatelessWidget {
   Icon _getActivityIcon(String activityType) {
     switch (activityType.toLowerCase()) {
       case 'running':
-        return Icon(Icons.directions_run, color: Colors.blue);
+        return const Icon(Icons.directions_run, color: Colors.blue);
       case 'cycling':
-        return Icon(Icons.directions_bike, color: Colors.green);
+        return const Icon(Icons.directions_bike, color: Colors.green);
       case 'swimming':
-        return Icon(Icons.pool, color: Colors.blueAccent);
+        return const Icon(Icons.pool, color: Colors.blueAccent);
       case 'walking':
-        return Icon(Icons.directions_walk, color: Colors.orange);
+        return const Icon(Icons.directions_walk, color: Colors.orange);
       case 'hiking':
-        return Icon(Icons.terrain, color: Colors.brown);
+        return const Icon(Icons.terrain, color: Colors.brown);
       case 'yoga':
-        return Icon(Icons.self_improvement, color: Colors.purple);
+        return const Icon(Icons.self_improvement, color: Colors.purple);
       case 'weightlifting':
-        return Icon(Icons.fitness_center, color: Colors.red);
+        return const Icon(Icons.fitness_center, color: Colors.red);
       case 'pilates':
-        return Icon(Icons.spa, color: Colors.lightGreen);
+        return const Icon(Icons.spa, color: Colors.lightGreen);
       case 'dancing':
-        return Icon(Icons.music_note, color: Colors.pink);
+        return const Icon(Icons.music_note, color: Colors.pink);
       case 'basketball':
-        return Icon(Icons.sports_basketball, color: Colors.orange);
+        return const Icon(Icons.sports_basketball, color: Colors.orange);
       case 'soccer':
-        return Icon(Icons.sports_soccer, color: Colors.green);
+        return const Icon(Icons.sports_soccer, color: Colors.green);
       case 'tennis':
-        return Icon(Icons.sports_tennis, color: Colors.blue);
+        return const Icon(Icons.sports_tennis, color: Colors.blue);
       case 'golf':
-        return Icon(Icons.sports_golf, color: Colors.yellow);
+        return const Icon(Icons.sports_golf, color: Colors.yellow);
       case 'surfing':
-        return Icon(Icons.surfing, color: Colors.lightBlue);
+        return const Icon(Icons.surfing, color: Colors.lightBlue);
       case 'snowboarding':
-        return Icon(Icons.snowboarding, color: Colors.indigo);
+        return const Icon(Icons.snowboarding, color: Colors.indigo);
       case 'skateboarding':
-        return Icon(Icons.skateboarding, color: Colors.deepOrange);
+        return const Icon(Icons.skateboarding, color: Colors.deepOrange);
       case 'rock climbing':
-        return Icon(Icons.explore, color: Colors.brown);
+        return const Icon(Icons.explore, color: Colors.brown);
       default:
-        return Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
+        return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
   }
 

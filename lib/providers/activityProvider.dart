@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -115,20 +114,20 @@ class ActivityProvider extends ChangeNotifier {
 
   List<Activity> _getActivitiesByDate(DateTime startDate, DateTime endDate) {
     return _activities.where((activity) =>
-    activity.date.isAfter(startDate.subtract(Duration(days: 1))) &&
-        activity.date.isBefore(endDate.add(Duration(days: 1)))).toList();
+    activity.date.isAfter(startDate.subtract(const Duration(days: 1))) &&
+        activity.date.isBefore(endDate.add(const Duration(days: 1)))).toList();
   }
 
   Map<String, List<Activity>> _groupActivities(List<Activity> activities) {
     Map<String, List<Activity>> groupedActivities = {};
-    activities.forEach((activity) {
-      final key = '${activity.type}';
+    for (var activity in activities) {
+      final key = activity.type;
       if (groupedActivities.containsKey(key)) {
         groupedActivities[key]!.add(activity);
       } else {
         groupedActivities[key] = [activity];
       }
-    });
+    }
     return groupedActivities;
   }
 
