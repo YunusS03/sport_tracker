@@ -133,9 +133,27 @@ class HomeScreen extends StatelessWidget {
             final activityType = groupedActivities.keys.elementAt(index);
             final activities = groupedActivities[activityType]!;
             final totalDuration = _calculateTotalDuration(activities);
+            final totalCalories = _calculateTotalCalories(activities);
+            final activityCount = activities.length;
 
             return ListTile(
-              leading: _getActivityIcon(activityType),
+              leading: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _getActivityIcon(activityType),
+                  const SizedBox(width: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.whatshot, size: 16, color: Colors.orange), // Calorie icon
+                      const SizedBox(width: 4),
+                      Text(
+                        '$totalCalories',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               title: Text(activityType),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +164,7 @@ class HomeScreen extends StatelessWidget {
                     valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                   Text(
-                    '${totalDuration.inHours} hours ${totalDuration.inMinutes.remainder(60)} minutes',
+                    '${totalDuration.inHours} hours ${totalDuration.inMinutes.remainder(60)} minutes ($activityCount activities)',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
@@ -159,6 +177,16 @@ class HomeScreen extends StatelessWidget {
       ],
     );
   }
+
+
+
+  int _calculateTotalCalories(List<Activity> activities) {
+    return activities.fold<int>(
+      0,
+          (previousValue, element) => previousValue + element.calories,
+    );
+  }
+
 
   void _navigateToDetailedActivityScreen(BuildContext context, String activityType) {
     Navigator.push(
