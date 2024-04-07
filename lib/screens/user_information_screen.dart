@@ -19,10 +19,10 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
   void initState() {
     super.initState();
     User? user = Provider.of<ActivityProvider>(context, listen: false).getUser();
-    _nameController = TextEditingController(text: user?.name ?? '');
-    _ageController = TextEditingController(text: user?.age.toString() ?? '');
-    _weightController = TextEditingController(text: user?.weight.toString() ?? '');
-    _heightController = TextEditingController(text: user?.height.toString() ?? '');
+    _nameController = TextEditingController(text: user.name ?? '');
+    _ageController = TextEditingController(text: user.age.toString() ?? '');
+    _weightController = TextEditingController(text: user.weight.toString() ?? '');
+    _heightController = TextEditingController(text: user.height.toString() ?? '');
   }
 
   @override

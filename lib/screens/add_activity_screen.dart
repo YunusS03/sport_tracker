@@ -286,7 +286,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     User? user = Provider.of<ActivityProvider>(context, listen: false).getUser();
 
     // Constants
-    double weightKg = user?.weight ?? 70; // Use user's weight or default value
+    double weightKg = user.weight ?? 70; // Use user's weight or default value
     const double caloriesPerKgPerHour = 1.05; // Example value for calories burned per kg per hour
 
     // Convert intensity to MET value
