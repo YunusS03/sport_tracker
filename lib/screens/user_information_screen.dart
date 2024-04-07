@@ -45,24 +45,36 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(
+                labelText: 'Name',
+                prefixIcon: Icon(Icons.person),
+              ),
             ),
             SizedBox(height: 10.0),
-            TextField(
+            TextFormField(
               controller: _ageController,
-              decoration: InputDecoration(labelText: 'Age'),
+              decoration: InputDecoration(
+                labelText: 'Age',
+                prefixIcon: Icon(Icons.calendar_today),
+              ),
             ),
             SizedBox(height: 10.0),
-            TextField(
+            TextFormField(
               controller: _weightController,
-              decoration: InputDecoration(labelText: 'Weight'),
+              decoration: InputDecoration(
+                labelText: 'Weight',
+                prefixIcon: Icon(Icons.fitness_center),
+              ),
             ),
             SizedBox(height: 10.0),
-            TextField(
+            TextFormField(
               controller: _heightController,
-              decoration: InputDecoration(labelText: 'Height'),
+              decoration: InputDecoration(
+                labelText: 'Height',
+                prefixIcon: Icon(Icons.height),
+              ),
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
