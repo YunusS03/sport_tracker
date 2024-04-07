@@ -6,7 +6,7 @@ import '../models/activity.dart';
 import '../providers/activityProvider.dart';
 
 class AddActivityScreen extends StatefulWidget {
-  const AddActivityScreen({super.key});
+  const AddActivityScreen({Key? key}) : super(key: key);
 
   @override
   _AddActivityScreenState createState() => _AddActivityScreenState();
@@ -48,6 +48,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     _hoursController.text = '0'; // Default value for hours
     _minutesController.text = '0'; // Default value for minutes
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +73,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
+            _buildActivityTypeDropdown(),
             const SizedBox(height: 20),
             const Text(
               'Duration:',
@@ -127,14 +130,15 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      border: Border.all(color: _selectedIntensity == index + 1 ? Colors.blue : Colors.grey),
+                      color: _selectedIntensity == index + 1 ? Colors.blue : Colors.white,
+                      border: Border.all(color: Colors.blue),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Center(
                       child: Text(
                         '${index + 1}',
                         style: TextStyle(
-                          color: _selectedIntensity == index + 1 ? Colors.blue : Colors.black,
+                          color: _selectedIntensity == index + 1 ? Colors.white : Colors.black,
                           fontWeight: _selectedIntensity == index + 1 ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
@@ -153,7 +157,6 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       ),
     );
   }
-
 
   // Function to show date and time picker dialog
   Future<void> _selectDateTime() async {
@@ -198,11 +201,32 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     }
   }
 
-  // Function to handle activity type selection
-  void _onActivityTypeChanged(String? value) {
-    setState(() {
-      _selectedActivityType = value!;
-    });
+  // Function to build activity type dropdown
+  Widget _buildActivityTypeDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _selectedActivityType,
+      onChanged: (value) {
+        setState(() {
+          _selectedActivityType = value!;
+        });
+      },
+      items: activityTypes.map((type) {
+        return DropdownMenuItem<String>(
+          value: type,
+          child: Row(
+            children: [
+              _getActivityIcon(type),
+              const SizedBox(width: 10),
+              Text(type),
+            ],
+          ),
+        );
+      }).toList(),
+      decoration: InputDecoration(
+        labelText: 'Activity Type',
+        border: OutlineInputBorder(),
+      ),
+    );
   }
 
   // Function to save activity
@@ -212,6 +236,27 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     final int minutes = int.tryParse(_minutesController.text) ?? 0;
     final int totalMinutes = hours * 60 + minutes;
 
+    if (totalMinutes == 0) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Duration cannot be 0. Please enter a valid duration.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     activityProvider.addActivity(Activity(
       date: _selectedDate,
       type: _selectedActivityType,
@@ -220,6 +265,25 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     ));
 
     Navigator.pop(context); // Go back to HomeScreen
+  }
+
+  // Function to build duration button
+  Widget _buildDurationButton(String label, int minutes) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          final int currentHours = int.tryParse(_hoursController.text) ?? 0;
+          final int currentMinutes = int.tryParse(_minutesController.text) ?? 0;
+          final int totalCurrentMinutes = currentHours * 60 + currentMinutes;
+
+          final int newTotalMinutes = totalCurrentMinutes + minutes;
+
+          _hoursController.text = (newTotalMinutes ~/ 60).toString();
+          _minutesController.text = (newTotalMinutes % 60).toString();
+        });
+      },
+      child: Text(label),
+    );
   }
 
   // Function to get activity icon based on activity type
@@ -262,25 +326,5 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       default:
         return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
-  }
-
-
-// Function to build duration button
-  Widget _buildDurationButton(String label, int minutes) {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          final int currentHours = int.tryParse(_hoursController.text) ?? 0;
-          final int currentMinutes = int.tryParse(_minutesController.text) ?? 0;
-          final int totalCurrentMinutes = currentHours * 60 + currentMinutes;
-
-          final int newTotalMinutes = totalCurrentMinutes + minutes;
-
-          _hoursController.text = (newTotalMinutes ~/ 60).toString();
-          _minutesController.text = (newTotalMinutes % 60).toString();
-        });
-      },
-      child: Text(label),
-    );
   }
 }
