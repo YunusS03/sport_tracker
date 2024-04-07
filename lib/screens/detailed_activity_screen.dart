@@ -8,7 +8,7 @@ import 'activity_chart_screen.dart';
 class DetailedActivityScreen extends StatefulWidget {
   final String activityType;
 
-  const DetailedActivityScreen({Key? key, required this.activityType}) : super(key: key);
+  const DetailedActivityScreen({super.key, required this.activityType});
 
   @override
   _DetailedActivityScreenState createState() => _DetailedActivityScreenState();
@@ -68,7 +68,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
         child: ListTile(
           title: Text(
             formattedDateTime,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,12 +76,12 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
               Row(
                 children: [
                   Icon(Icons.timer, color: Theme.of(context).primaryColor),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text('Duration: ${activity.duration.inMinutes} minutes'),
                 ],
               ),
-              SizedBox(height: 4),
-              Row(
+              const SizedBox(height: 4),
+              const Row(
                 children: [
                   Icon(Icons.fireplace, color: Colors.orange),
                   SizedBox(width: 4),
@@ -101,7 +101,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
                   // Delete the activity
                   activityProvider.removeActivity(activity.id!);
@@ -152,7 +152,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
       padding: const EdgeInsets.only(right: 16.0),
       child: DropdownButton<String>(
         value: _ascendingOrder ? 'Ascending' : 'Descending',
-        icon: Icon(Icons.sort),
+        icon: const Icon(Icons.sort),
         onChanged: (String? newValue) {
           setState(() {
             _ascendingOrder = newValue == 'Ascending';

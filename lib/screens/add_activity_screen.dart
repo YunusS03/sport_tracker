@@ -6,7 +6,7 @@ import '../models/activity.dart';
 import '../providers/activityProvider.dart';
 
 class AddActivityScreen extends StatefulWidget {
-  const AddActivityScreen({Key? key}) : super(key: key);
+  const AddActivityScreen({super.key});
 
   @override
   _AddActivityScreenState createState() => _AddActivityScreenState();

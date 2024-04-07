@@ -9,10 +9,12 @@ import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -23,8 +25,8 @@ class MyApp extends StatelessWidget {
           // Your theme settings...
         ),
         routes: {
-          '/addActivity': (context) => AddActivityScreen(),
-          '/activityChart': (context) => ActivityChartScreen(),
+          '/addActivity': (context) => const AddActivityScreen(),
+          '/activityChart': (context) => const ActivityChartScreen(),
           '/detailedActivity': (context) => const DetailedActivityScreen(activityType: '',),
 
         },
