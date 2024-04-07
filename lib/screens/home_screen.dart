@@ -77,7 +77,7 @@ class HomeScreen extends StatelessWidget {
             label: 'Plan',
           ),
         ],
-        selectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         showSelectedLabels: false,
         showUnselectedLabels: false,

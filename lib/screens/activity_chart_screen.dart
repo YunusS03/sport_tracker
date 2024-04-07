@@ -46,38 +46,6 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.show_chart),
-            label: 'Charts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Plan',
-          ),
-        ],
-        selectedItemColor: Colors.grey,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        onTap: (index) {
-          if (index == 0) {
-            // Navigate to the home screen when the home button is tapped
-            Navigator.popUntil(context, ModalRoute.withName('/'));
-          } else if (index == 2) {
-            // Navigate to the detailed activity screen when the plan button is tapped
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => DetailedActivityScreen(activityType: '',)),
-            // );
-          }
-        },
-      ),
     );
   }
 

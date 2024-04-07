@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/screens/calendar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
@@ -27,9 +28,11 @@ class MyApp extends StatelessWidget {
           '/addActivity': (context) => const AddActivityScreen(),
           '/activityChart': (context) => const ActivityChartScreen(),
           '/detailedActivity': (context) => const DetailedActivityScreen(activityType: ''),
-          '/home': (context) => const HomeScreen()
+          '/home': (context) => const HomeScreen(),
+          '/plan': (context) => CalendarScreen(),
         },
         home: const HomeScreen(),
+        // home: CalendarScreen(),
       ),
     );
   }

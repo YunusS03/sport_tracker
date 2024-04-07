@@ -90,7 +90,7 @@ class ActivityProvider extends ChangeNotifier {
 
 
 
-  User getUser() {
+  User? getUser() {
     return _user;
   }
 
@@ -182,9 +182,6 @@ class ActivityProvider extends ChangeNotifier {
     final activity = _activities.firstWhere((activity) => activity.type == type);
     return activity;
   }
-
-
-
 
   List<Activity> getActivitiesByType(String type) {
     return _activities.where((activity) => activity.type == type).toList();

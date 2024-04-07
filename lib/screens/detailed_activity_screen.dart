@@ -93,20 +93,57 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                onPressed: () {
-                  // Navigate to edit activity screen
-                  // You can implement this based on your requirement
-                },
-              ),
+              // IconButton(
+              //   icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+              //   onPressed: () {
+              //     // Navigate to edit activity screen
+              //     // You can implement this based on your requirement
+              //   },
+              // ),
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
-                  // Delete the activity
-                  activityProvider.removeActivity(activity.id!);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Are you sure you want to delete this activity?',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Close the bottom sheet
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Delete the activity
+                                    activityProvider.removeActivity(activity.id!);
+                                    Navigator.of(context).pop(); // Close the bottom sheet
+                                  },
+                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
+
             ],
           ),
         ),
