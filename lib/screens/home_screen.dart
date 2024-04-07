@@ -16,11 +16,11 @@ class HomeScreen extends StatelessWidget {
         title: const Text(
           'SportTracker',
           style: TextStyle(
-            fontFamily: 'Montserrat',
+            fontFamily: 'Segoe UI',
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.transparent,
         centerTitle: true,
         actions: [
           IconButton(
@@ -38,33 +38,15 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 300, // Set a specific height for the banner
-                aspectRatio: MediaQuery.of(context).size.width / 200, // Set aspect ratio to match screen width and banner height
-                viewportFraction: 1.0, // Ensure each image takes up the full viewport width
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                reverse: false,
-                autoPlay: true,
-                autoPlayInterval: Duration(seconds: 3),
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                autoPlayCurve: Curves.easeInOut,
-                enlargeCenterPage: true,
-                onPageChanged: (index, reason) {
-                  // Handle page change
-                },
-                scrollDirection: Axis.horizontal,
+            SizedBox(
+              width: MediaQuery.of(context).size.width, // Set width to fill the screen width
+              height: 200, // Set a specific height for the image
+              child: Image.asset(
+                'assets/images/carousel1.jpg',
+                width: double.infinity, // Make the image fill the width of its container
+                fit: BoxFit.fitWidth, // Ensure the image fills the entire container without cropping
               ),
-              items: [
-                // Add your actual image widgets here
-                Image.asset('assets/images/carousel1.jpg', fit: BoxFit.cover),
-                Image.asset('assets/images/carousel2.jpg', fit: BoxFit.cover),
-                // Add more images as needed
-              ],
             ),
-
-
 
             const SizedBox(height: 20), // Add some spacing after the carousel
             _buildGroupedActivities(context, 'This Week'),

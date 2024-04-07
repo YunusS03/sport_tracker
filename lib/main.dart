@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ActivityProvider(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false, // Remove the debug banner
         title: 'SportTracker',
         theme: ThemeData(
           // Your theme settings...
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
           '/addActivity': (context) => const AddActivityScreen(),
           '/activityChart': (context) => const ActivityChartScreen(),
           '/detailedActivity': (context) => const DetailedActivityScreen(activityType: ''),
+          '/home': (context) => const HomeScreen()
         },
         home: const HomeScreen(),
       ),
