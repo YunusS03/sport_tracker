@@ -262,6 +262,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       type: _selectedActivityType,
       duration: Duration(minutes: totalMinutes),
       intensity: _selectedIntensity,
+      calories: 500
     ));
 
     Navigator.pop(context); // Go back to HomeScreen

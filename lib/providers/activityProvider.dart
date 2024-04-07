@@ -3,10 +3,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/activity.dart';
 
-
-
-
-
 class ActivityProvider extends ChangeNotifier {
   late Database _database;
   List<Activity> _activities = [];
@@ -22,12 +18,13 @@ class ActivityProvider extends ChangeNotifier {
       join(await getDatabasesPath(), 'activity_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE activities(id INTEGER PRIMARY KEY, date TEXT, type TEXT, duration INTEGER, intensity INTEGER)',
+          'CREATE TABLE activities(id INTEGER PRIMARY KEY, date TEXT, type TEXT, duration INTEGER, intensity INTEGER, calories INTEGER)',
         );
       },
       version: 1,
     );
   }
+
 
   Future<void> _loadActivities() async {
     final List<Map<String, dynamic>> maps = await _database.query('activities');
@@ -38,6 +35,7 @@ class ActivityProvider extends ChangeNotifier {
         type: maps[i]['type'],
         duration: Duration(minutes: maps[i]['duration']),
         intensity: maps[i]['intensity'],
+        calories: maps[i]['calories'], // Added calories field
       );
     });
 
@@ -53,6 +51,7 @@ class ActivityProvider extends ChangeNotifier {
     );
     await _loadActivities(); // Reload activities after adding a new one
   }
+
 
   Future<void> removeActivity(int id) async {
     await _database.delete(
