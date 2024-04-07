@@ -42,10 +42,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddActivityScreen()),
-          );
+          _navigateToAddActivityScreen(context);
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
@@ -70,33 +67,47 @@ class HomeScreen extends StatelessWidget {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: (index) {
-          if (index == 1) {
-            // Navigate to the chart screen when the chart button is tapped
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ActivityChartScreen()),
-            );
+          switch (index) {
+            case 0:
+            // Navigate to the Home screen when the Home button is tapped
+              _navigateToHomeScreen(context);
+              break;
+            case 1:
+            // Navigate to the Chart screen when the Charts button is tapped
+              _navigateToChartScreen(context);
+              break;
+            case 2:
+            // Navigate to the Plan screen when the Plan button is tapped
+              _navigateToPlanScreen(context);
+              break;
           }
         },
       ),
     );
   }
+
+
+  void _navigateToAddActivityScreen(BuildContext context) {
+    Navigator.pushNamed(context, '/addActivity');
+  }
+
+  void _navigateToChartScreen(BuildContext context) {
+    Navigator.pushNamed(context, '/activityChart');
+  }
+
+
+  void _navigateToHomeScreen(BuildContext context) {
+    Navigator.pushNamed(context, '/home');
+  }
+
+  void _navigateToPlanScreen(BuildContext context) {
+    Navigator.pushNamed(context, '/plan');
+  }
+
+
   Widget _buildGroupedActivities(BuildContext context, String title) {
     final provider = Provider.of<ActivityProvider>(context);
-    Map<String, List<Activity>> groupedActivities = {};
-
-    switch (title) {
-      case 'This Week':
-        groupedActivities = provider.activitiesByWeek();
-        break;
-      case 'This Month':
-        groupedActivities = provider.activitiesByMonth();
-        break;
-      case 'This Year':
-        groupedActivities = provider.activitiesByYear();
-        break;
-    }
+    final groupedActivities = _getGroupedActivities(provider, title);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,14 +129,7 @@ class HomeScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             final activityType = groupedActivities.keys.elementAt(index);
             final activities = groupedActivities[activityType]!;
-
-            final totalDuration = activities.fold<Duration>(
-                Duration.zero, (previousValue, element) =>
-            previousValue + element.duration);
-
-            // Calculate progress percentage based on goals
-            double progress = totalDuration.inMinutes / 600; // Assuming goal is 10 hours (600 minutes)
-            if (progress > 1.0) progress = 1.0;
+            final totalDuration = _calculateTotalDuration(activities);
 
             return ListTile(
               leading: _getActivityIcon(activityType),
@@ -134,25 +138,17 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   LinearProgressIndicator(
-                    value: progress,
+                    value: totalDuration.inMinutes / 600, // Assuming goal is 10 hours (600 minutes)
                     backgroundColor: Colors.grey[300],
                     valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                   Text(
                     '${totalDuration.inHours} hours ${totalDuration.inMinutes.remainder(60)} minutes',
                     style: const TextStyle(fontSize: 12),
-                  )
-                  ,
+                  ),
                 ],
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DetailedActivityScreen(activityType: activityType),
-                  ),
-                );
-              },
+              onTap: () => _navigateToDetailedActivityScreen(context, activityType),
             );
           },
         ),
@@ -161,6 +157,34 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  void _navigateToDetailedActivityScreen(BuildContext context, String activityType) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DetailedActivityScreen(activityType: activityType)),
+    );
+  }
+
+
+  Map<String, List<Activity>> _getGroupedActivities(ActivityProvider provider, String title) {
+    switch (title) {
+      case 'This Week':
+        return provider.activitiesByWeek();
+      case 'This Month':
+        return provider.activitiesByMonth();
+      case 'This Year':
+        return provider.activitiesByYear();
+      default:
+        return {};
+    }
+  }
+
+
+  Duration _calculateTotalDuration(List<Activity> activities) {
+    return activities.fold<Duration>(
+      Duration.zero,
+          (previousValue, element) => previousValue + element.duration,
+    );
+  }
 
   Icon _getActivityIcon(String activityType) {
     switch (activityType.toLowerCase()) {
@@ -202,5 +226,6 @@ class HomeScreen extends StatelessWidget {
         return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
   }
+
 
 }

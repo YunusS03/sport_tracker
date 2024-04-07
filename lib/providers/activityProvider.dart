@@ -28,6 +28,8 @@ class Activity {
   }
 }
 
+
+
 class ActivityProvider extends ChangeNotifier {
   late Database _database;
   List<Activity> _activities = [];

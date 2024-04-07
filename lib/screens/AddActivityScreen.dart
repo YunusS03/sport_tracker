@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/activityProvider.dart';
 
 class AddActivityScreen extends StatefulWidget {
-  const AddActivityScreen({super.key});
+  const AddActivityScreen({Key? key}) : super(key: key);
 
   @override
   _AddActivityScreenState createState() => _AddActivityScreenState();
@@ -41,13 +41,6 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     'Other'
   ];
 
-  bool isNumeric(String? str) {
-    if (str == null) {
-      return false;
-    }
-    return double.tryParse(str) != null;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -67,13 +60,13 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: () => _selectDate(context),
+              onTap: _selectDateTime,
               child: Row(
                 children: [
                   const Icon(Icons.calendar_today_outlined), // Modern date picker icon
                   const SizedBox(width: 10),
                   Text(
-                    'Select Date: ${DateFormat.yMMMd().format(_selectedDate)}',
+                    'Select Date: ${DateFormat.yMMMd().format(_selectedDate)} ${DateFormat.Hm().format(_selectedDate)}', // Display selected date and time
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],
@@ -82,11 +75,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             const SizedBox(height: 20),
             DropdownButtonFormField(
               value: _selectedActivityType,
-              onChanged: (String? value) {
-                setState(() {
-                  _selectedActivityType = value!;
-                });
-              },
+              onChanged: _onActivityTypeChanged,
               items: activityTypes.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -159,27 +148,80 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
-                final int hours = int.tryParse(_hoursController.text) ?? 0;
-                final int minutes = int.tryParse(_minutesController.text) ?? 0;
-                final int totalMinutes = hours * 60 + minutes;
-
-                activityProvider.addActivity(Activity(
-                  date: _selectedDate,
-                  type: _selectedActivityType,
-                  duration: Duration(minutes: totalMinutes),
-                  intensity: _selectedIntensity,
-                ));
-
-                Navigator.pop(context); // Go back to HomeScreen
-              },
+              onPressed: _saveActivity,
               child: const Text('Save'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // Function to show date and time picker dialog
+  Future<void> _selectDateTime() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light().copyWith(
+              primary: Colors.blue, // Header background color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.blue, // Button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (pickedTime != null) {
+        final DateTime selectedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        setState(() {
+          _selectedDate = selectedDateTime;
+        });
+      }
+    }
+  }
+
+  // Function to handle activity type selection
+  void _onActivityTypeChanged(String? value) {
+    setState(() {
+      _selectedActivityType = value!;
+    });
+  }
+
+  // Function to save activity
+  void _saveActivity() {
+    final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
+    final int hours = int.tryParse(_hoursController.text) ?? 0;
+    final int minutes = int.tryParse(_minutesController.text) ?? 0;
+    final int totalMinutes = hours * 60 + minutes;
+
+    activityProvider.addActivity(Activity(
+      date: _selectedDate,
+      type: _selectedActivityType,
+      duration: Duration(minutes: totalMinutes),
+      intensity: _selectedIntensity,
+    ));
+
+    Navigator.pop(context); // Go back to HomeScreen
   }
 
   // Function to get activity icon based on activity type
@@ -221,36 +263,6 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         return const Icon(Icons.explore, color: Colors.brown);
       default:
         return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
-    }
-  }
-
-  // Function to show date picker dialog
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime.now(),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light().copyWith(
-              primary: Colors.blue, // Header background color
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blue, // Button text color
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
     }
   }
 }
