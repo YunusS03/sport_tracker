@@ -302,25 +302,21 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
     List<Color?> colors = [
       Colors.blue[200],
       Colors.green[200],
-      Colors.blueAccent[100],
       Colors.orange[200],
-      Colors.brown[200],
       Colors.purple[200],
       Colors.red[200],
-      Colors.lightGreen[200],
-      Colors.pink[200],
-      Colors.orange[200],
-      Colors.green[200],
-      Colors.blue[200],
       Colors.yellow[200],
-      Colors.lightBlue[200],
       Colors.indigo[200],
-      Colors.deepOrange[200],
-      Colors.brown[200],
+      Colors.teal[200],
+      Colors.pink[200],
+      Colors.amber[200],
+      // Add more colors as needed
     ];
-    // Find index of type and return corresponding color
-    int index = (type.codeUnitAt(0) + type.codeUnitAt(type.length - 1)) % colors.length;
-    return colors[index];
+    // Generate a hash code based on the activity type
+    int hashCode = type.hashCode;
+
+    // Use the hash code to select a color from the list
+    return colors[hashCode % colors.length];
   }
 }
 
