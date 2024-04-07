@@ -2,27 +2,90 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/activity.dart';
+import '../models/user.dart';
 
 class ActivityProvider extends ChangeNotifier {
   late Database _database;
   List<Activity> _activities = [];
+  late User _user;
 
   ActivityProvider() {
     _initDatabase().then((_) {
       _loadActivities();
+      _loadUser();
     });
   }
 
   Future<void> _initDatabase() async {
     _database = await openDatabase(
       join(await getDatabasesPath(), 'activity_database.db'),
-      onCreate: (db, version) {
-        return db.execute(
+      onCreate: (db, version) async {
+        // Create activities table
+        await db.execute(
           'CREATE TABLE activities(id INTEGER PRIMARY KEY, date TEXT, type TEXT, duration INTEGER, intensity INTEGER, calories INTEGER)',
         );
+
+        // Create user table
+        await db.execute(
+          'CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
+        );
+
+        // Insert a default user
+        await db.insert(
+          'users',
+          User(name: 'John Doe', age: 30).toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
       },
-      version: 1,
+      version: 2,
     );
+  }
+
+  Future<void> _loadUser() async {
+    final List<Map<String, dynamic>> maps = await _database.query('users');
+    if (maps.isNotEmpty) {
+      _user = User(
+        id: maps[0]['id'],
+        name: maps[0]['name'],
+        age: maps[0]['age'],
+      );
+    } else {
+      // If no user found, initialize with default values
+      _user = User(id: null, name: '', age: 0);
+    }
+
+    print('Loaded user from the database');
+    notifyListeners(); // Notify listeners after loading user
+  }
+
+  Future<void> setUser(User user) async {
+    final existingUser = await _database.query('users');
+    if (existingUser.isNotEmpty) {
+      await _database.update(
+        'users',
+        {
+          'name': user.name,
+          'age': user.age,
+        },
+        where: 'id = ?',
+        whereArgs: [existingUser[0]['id']],
+      );
+    } else {
+      await _database.insert(
+        'users',
+        user.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    _user = user; // Set the user in memory
+    print('User updated in the database: $user');
+    notifyListeners(); // Notify listeners after setting user
+  }
+
+
+
+  User getUser() {
+    return _user;
   }
 
 

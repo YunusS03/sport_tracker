@@ -1,3 +1,4 @@
+import 'package:fitness_tracker/screens/user_information_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,10 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // Implement settings functionality here
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserInformationScreen()),
+              );
             },
           ),
         ],
