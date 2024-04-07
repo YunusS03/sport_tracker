@@ -27,13 +27,14 @@ class ActivityProvider extends ChangeNotifier {
 
         // Create user table
         await db.execute(
-          'CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
+          'CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, age INTEGER, weight REAL, height REAL)',
         );
+
 
         // Insert a default user
         await db.insert(
           'users',
-          User(name: 'John Doe', age: 30).toMap(),
+          User(name: 'John Doe', age: 30, weight: 70.0, height: 170.0).toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       },
@@ -48,15 +49,18 @@ class ActivityProvider extends ChangeNotifier {
         id: maps[0]['id'],
         name: maps[0]['name'],
         age: maps[0]['age'],
+        weight: maps[0]['weight'],
+        height: maps[0]['height'],
       );
     } else {
       // If no user found, initialize with default values
-      _user = User(id: null, name: '', age: 0);
+      _user = User(id: null, name: 'default user', age: 24, weight: 70, height: 172);
     }
 
     print('Loaded user from the database');
     notifyListeners(); // Notify listeners after loading user
   }
+
 
   Future<void> setUser(User user) async {
     final existingUser = await _database.query('users');
@@ -66,6 +70,8 @@ class ActivityProvider extends ChangeNotifier {
         {
           'name': user.name,
           'age': user.age,
+          'weight': user.weight,
+          'height': user.height,
         },
         where: 'id = ?',
         whereArgs: [existingUser[0]['id']],

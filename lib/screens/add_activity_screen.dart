@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/activity.dart';
+import '../models/user.dart';
 import '../providers/activityProvider.dart';
 
 class AddActivityScreen extends StatefulWidget {
@@ -279,9 +280,13 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     Navigator.pop(context); // Go back to HomeScreen
   }
 
+
   double calculateCalories(Activity activity) {
+    // Retrieve the user object from the ActivityProvider
+    User? user = Provider.of<ActivityProvider>(context, listen: false).getUser();
+
     // Constants
-    const double weightKg = 70; // Example weight in kilograms
+    double weightKg = user?.weight ?? 70; // Use user's weight or default value
     const double caloriesPerKgPerHour = 1.05; // Example value for calories burned per kg per hour
 
     // Convert intensity to MET value
@@ -315,6 +320,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
     return calories;
   }
+
 
 
   // Function to build duration button

@@ -12,21 +12,25 @@ class UserInformationScreen extends StatefulWidget {
 class _UserInformationScreenState extends State<UserInformationScreen> {
   late TextEditingController _nameController;
   late TextEditingController _ageController;
+  late TextEditingController _weightController;
+  late TextEditingController _heightController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize text controllers with user information
     User? user = Provider.of<ActivityProvider>(context, listen: false).getUser();
     _nameController = TextEditingController(text: user?.name ?? '');
     _ageController = TextEditingController(text: user?.age.toString() ?? '');
+    _weightController = TextEditingController(text: user?.weight.toString() ?? '');
+    _heightController = TextEditingController(text: user?.height.toString() ?? '');
   }
 
   @override
   void dispose() {
-    // Dispose text controllers
     _nameController.dispose();
     _ageController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
     super.dispose();
   }
 
@@ -50,24 +54,29 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
               controller: _ageController,
               decoration: InputDecoration(labelText: 'Age'),
             ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: _weightController,
+              decoration: InputDecoration(labelText: 'Weight'),
+            ),
+            SizedBox(height: 10.0),
+            TextField(
+              controller: _heightController,
+              decoration: InputDecoration(labelText: 'Height'),
+            ),
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                // Save updated user information
                 String name = _nameController.text;
                 int age = int.tryParse(_ageController.text) ?? 0;
-                User updatedUser = User(name: name, age: age);
+                double weight = double.tryParse(_weightController.text) ?? 0.0;
+                double height = double.tryParse(_heightController.text) ?? 0.0;
+                User updatedUser = User(name: name, age: age, weight: weight, height: height);
                 Provider.of<ActivityProvider>(context, listen: false).setUser(updatedUser);
-
-                // Print message to console
-                print('User information saved: $updatedUser');
-
-                // Return to the previous page
                 Navigator.pop(context);
               },
               child: Text('Save'),
             ),
-
           ],
         ),
       ),
