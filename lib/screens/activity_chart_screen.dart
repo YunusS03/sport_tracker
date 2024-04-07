@@ -5,14 +5,11 @@ import 'package:fitness_tracker/providers/activityProvider.dart';
 
 import '../models/activity.dart';
 
-
 class ActivityChartScreen extends StatefulWidget {
-  const ActivityChartScreen({super.key});
+  const ActivityChartScreen({Key? key}) : super(key: key);
 
   @override
   _ActivityChartScreenState createState() => _ActivityChartScreenState();
-
-
 }
 
 class _ActivityChartScreenState extends State<ActivityChartScreen> {
@@ -65,7 +62,6 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
           if (index == 0) {
             // Navigate to the home screen when the home button is tapped
             Navigator.popUntil(context, ModalRoute.withName('/'));
-
           } else if (index == 2) {
             // Navigate to the detailed activity screen when the plan button is tapped
             // Navigator.push(
@@ -112,19 +108,42 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
         ),
       );
     } else {
-      return SfCircularChart(
-        title: ChartTitle(text: 'Activity Distribution by Type'),
-        legend: Legend(
-          isVisible: true,
-          overflowMode: LegendItemOverflowMode.wrap, // Wrap legend items if there's not enough space
-        ),
-        series: <CircularSeries<ActivityData, String>>[
-          DoughnutSeries<ActivityData, String>(
-            dataSource: _generateChartData(activities),
-            xValueMapper: (ActivityData data, _) => data.type, // Activity Type
-            yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
-            dataLabelSettings: const DataLabelSettings(isVisible: true),
-            pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
+      return Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: SfCircularChart(
+              title: ChartTitle(text: 'Activity Distribution by Type'),
+              legend: Legend(
+                isVisible: true,
+                overflowMode: LegendItemOverflowMode.wrap, // Wrap legend items if there's not enough space
+              ),
+              series: <CircularSeries<ActivityData, String>>[
+                DoughnutSeries<ActivityData, String>(
+                  dataSource: _generateChartData(activities),
+                  xValueMapper: (ActivityData data, _) => data.type, // Activity Type
+                  yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
+                  dataLabelSettings: const DataLabelSettings(isVisible: true),
+                  pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            flex: 1,
+            child: SfCartesianChart(
+              title: ChartTitle(text: 'Calories Burned by Activity Type'),
+              primaryXAxis: CategoryAxis(),
+              series: <ChartSeries>[
+                ColumnSeries<ActivityData, String>(
+                  dataSource: _generateChartData(activities),
+                  xValueMapper: (ActivityData data, _) => data.type, // Activity Type
+                  yValueMapper: (ActivityData data, _) => data.calories.toDouble(), // Calories burned
+                  dataLabelSettings: const DataLabelSettings(isVisible: true),
+                ),
+              ],
+            ),
           ),
         ],
       );
@@ -168,14 +187,17 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
 
   List<ActivityData> _generateChartData(Map<String, int> activities) {
     List<ActivityData> data = [];
-    int index = 0;
     activities.forEach((type, duration) {
-      data.add(ActivityData(
-        type: type,
-        totalDuration: duration,
-        color: _getColor(index),
-      ));
-      index++;
+      // Find the corresponding activity object
+      final activity = Provider.of<ActivityProvider>(context, listen: false).getActivityByType(type);
+      if (activity != null) {
+        data.add(ActivityData(
+          type: type,
+          totalDuration: duration,
+          color: _getColor(data.length),
+          calories: activity.calories, // Use the calories property directly from the activity object
+        ));
+      }
     });
     return data;
   }
@@ -210,10 +232,12 @@ class ActivityData {
   final String type;
   final int totalDuration;
   final Color? color;
+  final int calories;
 
   ActivityData({
     required this.type,
     required this.totalDuration,
     required this.color,
+    required this.calories,
   });
 }

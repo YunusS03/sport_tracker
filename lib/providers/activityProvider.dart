@@ -178,6 +178,14 @@ class ActivityProvider extends ChangeNotifier {
     return groupedActivities;
   }
 
+  Activity? getActivityByType(String type) {
+    final activity = _activities.firstWhere((activity) => activity.type == type);
+    return activity;
+  }
+
+
+
+
   List<Activity> getActivitiesByType(String type) {
     return _activities.where((activity) => activity.type == type).toList();
   }
