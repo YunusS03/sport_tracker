@@ -30,14 +30,21 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
       appBar: AppBar(
         title: const Text('Activity Charts'),
       ),
-      body: Column(
-        children: [
-          _buildFilterButtons(),
-          const SizedBox(height: 16),
-          Expanded(
-            child: _buildChart(groupedActivities),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildFilterButtons(),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildChart(groupedActivities),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -110,44 +117,97 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
     } else {
       return Column(
         children: [
-          Expanded(
-            flex: 2,
-            child: SfCircularChart(
-              title: ChartTitle(text: 'Activity Distribution by Type'),
-              legend: Legend(
-                isVisible: true,
-                overflowMode: LegendItemOverflowMode.wrap, // Wrap legend items if there's not enough space
-              ),
-              series: <CircularSeries<ActivityData, String>>[
-                DoughnutSeries<ActivityData, String>(
-                  dataSource: _generateChartData(activities),
-                  xValueMapper: (ActivityData data, _) => data.type, // Activity Type
-                  yValueMapper: (ActivityData data, _) => data.totalDuration.toDouble(), // Total Duration (Numeric)
-                  dataLabelSettings: const DataLabelSettings(isVisible: true),
-                  pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey, // Custom color mapping
-                ),
-              ],
-            ),
-          ),
+          _buildActivityDistributionChart(activities),
           const SizedBox(height: 16),
-          Expanded(
-            flex: 1,
-            child: SfCartesianChart(
-              title: ChartTitle(text: 'Calories Burned by Activity Type'),
-              primaryXAxis: CategoryAxis(),
-              series: <ChartSeries>[
-                ColumnSeries<ActivityData, String>(
-                  dataSource: _generateChartData(activities),
-                  xValueMapper: (ActivityData data, _) => data.type, // Activity Type
-                  yValueMapper: (ActivityData data, _) => data.calories.toDouble(), // Calories burned
-                  dataLabelSettings: const DataLabelSettings(isVisible: true),
-                ),
-              ],
-            ),
-          ),
+          _buildIntensityVsDurationChart(activities),
+          const SizedBox(height: 16),
+          _buildAverageIntensityChart(activities),
+          const SizedBox(height: 16),
+          _buildTotalCaloriesBurnedChart(activities),
         ],
       );
     }
+  }
+
+  Widget _buildActivityDistributionChart(Map<String, int> activities) {
+    return SizedBox(
+      height: 300,
+      child: SfCircularChart(
+        title: ChartTitle(text: 'Activity Distribution by Type'),
+        legend: Legend(
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode.scroll, // Set overflow mode to scroll
+        ),
+        series: <CircularSeries<ActivityData, String>>[
+          DoughnutSeries<ActivityData, String>(
+            dataSource: _generateChartData(activities, ChartType.ActivityDistribution),
+            xValueMapper: (ActivityData data, _) => data.type,
+            yValueMapper: (ActivityData data, _) => data.totalDuration?.toDouble() ?? 0,
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+            pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIntensityVsDurationChart(Map<String, int> activities) {
+    return SizedBox(
+      height: 300,
+      child: SfCartesianChart(
+        title: ChartTitle(text: 'Intensity vs. Duration'),
+        primaryXAxis: NumericAxis(title: AxisTitle(text: 'Duration (minutes)')),
+        primaryYAxis: NumericAxis(title: AxisTitle(text: 'Intensity')),
+        series: <ChartSeries>[
+          ScatterSeries<ActivityData, int>(
+            dataSource: _generateChartData(activities, ChartType.IntensityVsDuration),
+            xValueMapper: (ActivityData data, _) => data.totalDuration ?? 0,
+            yValueMapper: (ActivityData data, _) => data.intensity ?? 0,
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+            pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAverageIntensityChart(Map<String, int> activities) {
+    return SizedBox(
+      height: 300,
+      child: SfCartesianChart(
+        title: ChartTitle(text: 'Average Intensity by Activity Type'),
+        primaryXAxis: CategoryAxis(),
+        primaryYAxis: NumericAxis(title: AxisTitle(text: 'Average Intensity')),
+        series: <ChartSeries>[
+          ColumnSeries<ActivityData, String>(
+            dataSource: _generateChartData(activities, ChartType.AverageIntensity),
+            xValueMapper: (ActivityData data, _) => data.type,
+            yValueMapper: (ActivityData data, _) => data.averageIntensity?.toDouble() ?? 0,
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+            pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalCaloriesBurnedChart(Map<String, int> activities) {
+    return SizedBox(
+      height: 300,
+      child: SfCartesianChart(
+        title: ChartTitle(text: 'Total Calories Burned by Activity Type'),
+        primaryXAxis: CategoryAxis(),
+        series: <ChartSeries>[
+          ColumnSeries<ActivityData, String>(
+            dataSource: _generateChartData(activities, ChartType.TotalCaloriesBurned),
+            xValueMapper: (ActivityData data, _) => data.type,
+            yValueMapper: (ActivityData data, _) => data.calories?.toDouble() ?? 0,
+            dataLabelSettings: const DataLabelSettings(isVisible: true),
+            pointColorMapper: (ActivityData data, _) => data.color ?? Colors.grey,
+          ),
+        ],
+      ),
+    );
   }
 
   List<Activity> _filterActivities(List<Activity> activities) {
@@ -185,24 +245,59 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
     return groupedActivities;
   }
 
-  List<ActivityData> _generateChartData(Map<String, int> activities) {
+  List<ActivityData> _generateChartData(Map<String, int> activities, ChartType chartType) {
     List<ActivityData> data = [];
     activities.forEach((type, duration) {
-      // Find the corresponding activity object
       final activity = Provider.of<ActivityProvider>(context, listen: false).getActivityByType(type);
       if (activity != null) {
-        data.add(ActivityData(
-          type: type,
-          totalDuration: duration,
-          color: _getColor(data.length),
-          calories: activity.calories, // Use the calories property directly from the activity object
-        ));
+        switch (chartType) {
+          case ChartType.ActivityDistribution:
+            data.add(ActivityData(
+              type: type,
+              totalDuration: duration,
+              color: _getColor(type),
+              calories: activity.calories,
+            ));
+            break;
+          case ChartType.IntensityVsDuration:
+            data.add(ActivityData(
+              type: type,
+              totalDuration: duration,
+              intensity: activity.intensity,
+              color: _getColor(type),
+            ));
+            break;
+          case ChartType.AverageIntensity:
+            if (!data.any((element) => element.type == type)) {
+              // Calculate average intensity for each activity type
+              final activitiesOfType = activities.values.where((value) => type == activity.type).length;
+              final totalIntensity = activities.entries
+                  .where((entry) => entry.key == type)
+                  .map((entry) => entry.value)
+                  .reduce((value, element) => value + element);
+              final averageIntensity = totalIntensity ~/ activitiesOfType;
+              data.add(ActivityData(
+                type: type,
+                averageIntensity: averageIntensity,
+                color: _getColor(type),
+              ));
+            }
+            break;
+          case ChartType.TotalCaloriesBurned:
+            data.add(ActivityData(
+              type: type,
+              totalDuration: duration,
+              calories: activity.calories,
+              color: _getColor(type),
+            ));
+            break;
+        }
       }
     });
     return data;
   }
 
-  Color? _getColor(int index) {
+  Color? _getColor(String type) {
     // Pastel color palette
     List<Color?> colors = [
       Colors.blue[200],
@@ -223,21 +318,33 @@ class _ActivityChartScreenState extends State<ActivityChartScreen> {
       Colors.deepOrange[200],
       Colors.brown[200],
     ];
-    // If index exceeds the color palette, cycle back to the beginning
-    return colors[index % colors.length];
+    // Find index of type and return corresponding color
+    int index = (type.codeUnitAt(0) + type.codeUnitAt(type.length - 1)) % colors.length;
+    return colors[index];
   }
+}
+
+enum ChartType {
+  ActivityDistribution,
+  IntensityVsDuration,
+  AverageIntensity,
+  TotalCaloriesBurned,
 }
 
 class ActivityData {
   final String type;
-  final int totalDuration;
+  final int? totalDuration;
   final Color? color;
-  final int calories;
+  final int? calories;
+  final int? intensity;
+  final int? averageIntensity;
 
   ActivityData({
     required this.type,
-    required this.totalDuration,
-    required this.color,
-    required this.calories,
+    this.totalDuration,
+    this.color,
+    this.calories,
+    this.intensity,
+    this.averageIntensity,
   });
 }
