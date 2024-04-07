@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:provider/provider.dart';
-import 'ActivityChartScreen.dart';
-import 'AddActivityScreen.dart';
-import 'DetailedActivityScreen.dart';
+import '../models/activity.dart';
+import 'activity_chart_screen.dart';
+import 'add_activity_screen.dart';
+import 'detailed_activity_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

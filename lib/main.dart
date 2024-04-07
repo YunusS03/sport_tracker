@@ -1,7 +1,7 @@
 import 'package:fitness_tracker/providers/activityProvider.dart';
-import 'package:fitness_tracker/screens/ActivityChartScreen.dart';
-import 'package:fitness_tracker/screens/AddActivityScreen.dart';
-import 'package:fitness_tracker/screens/DetailedActivityScreen.dart';
+import 'package:fitness_tracker/screens/activity_chart_screen.dart';
+import 'package:fitness_tracker/screens/add_activity_screen.dart';
+import 'package:fitness_tracker/screens/detailed_activity_screen.dart';
 import 'package:fitness_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

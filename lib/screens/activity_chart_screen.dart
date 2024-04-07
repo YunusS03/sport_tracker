@@ -3,6 +3,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 
+import '../models/activity.dart';
+
 
 class ActivityChartScreen extends StatefulWidget {
   const ActivityChartScreen({super.key});

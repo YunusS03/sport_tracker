@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
-import 'ActivityChartScreen.dart';
+import '../models/activity.dart';
+import 'activity_chart_screen.dart';
 
 class DetailedActivityScreen extends StatefulWidget {
   final String activityType;
