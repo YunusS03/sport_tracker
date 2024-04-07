@@ -81,11 +81,11 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
                 ],
               ),
               const SizedBox(height: 4),
-              const Row(
+              Row(
                 children: [
                   Icon(Icons.fireplace, color: Colors.orange),
-                  SizedBox(width: 4),
-                  Text('Burned Calories: 444 kcal', style: TextStyle(color: Colors.grey)),
+                  const SizedBox(width: 4),
+                  Text('Burned Calories: ${activity.calories} kcal', style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ],
@@ -113,6 +113,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
       ),
     );
   }
+
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(

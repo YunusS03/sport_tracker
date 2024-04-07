@@ -4,7 +4,7 @@ class Activity {
   final String type;
   final Duration duration;
   final int intensity;
-  final int calories; // Added calories field
+  final int? calories; // Updated calories field to be optional
 
   Activity({
     this.id,
@@ -12,7 +12,7 @@ class Activity {
     required this.type,
     required this.duration,
     required this.intensity,
-    required this.calories, // Added calories parameter
+    this.calories, // Updated calories parameter to be optional
   });
 
   Map<String, dynamic> toMap() {

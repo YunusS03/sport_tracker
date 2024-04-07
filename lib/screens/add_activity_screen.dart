@@ -257,16 +257,65 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       return;
     }
 
-    activityProvider.addActivity(Activity(
-      date: _selectedDate,
+    // Calculate calories burned
+    double calories = calculateCalories(Activity(
+      date: _selectedDate, // Pass the selected date
       type: _selectedActivityType,
       duration: Duration(minutes: totalMinutes),
       intensity: _selectedIntensity,
-      calories: 500
     ));
+
+
+
+    activityProvider.addActivity(Activity(
+      date: _selectedDate, // Pass the selected date
+      type: _selectedActivityType,
+      duration: Duration(minutes: totalMinutes),
+      intensity: _selectedIntensity,
+      calories: calories.toInt(), // Pass the calculated calories
+    ));
+
 
     Navigator.pop(context); // Go back to HomeScreen
   }
+
+  double calculateCalories(Activity activity) {
+    // Constants
+    const double weightKg = 70; // Example weight in kilograms
+    const double caloriesPerKgPerHour = 1.05; // Example value for calories burned per kg per hour
+
+    // Convert intensity to MET value
+    double met;
+    switch (activity.intensity) {
+      case 1:
+        met = 4.3; // Light intensity
+        break;
+      case 2:
+        met = 6.0; // Moderate intensity
+        break;
+      case 3:
+        met = 8.0; // Vigorous intensity
+        break;
+      case 4:
+        met = 10.0; // Very vigorous intensity
+        break;
+      case 5:
+        met = 12.0; // Extremely vigorous intensity
+        break;
+      default:
+        met = 1.0; // Default to resting metabolic rate
+        break;
+    }
+
+    // Calculate duration in hours
+    double durationHours = activity.duration.inMinutes / 60.0;
+
+    // Calculate calories burned
+    double calories = (caloriesPerKgPerHour * weightKg * met * durationHours).roundToDouble();
+
+    return calories;
+  }
+
 
   // Function to build duration button
   Widget _buildDurationButton(String label, int minutes) {
