@@ -1,12 +1,13 @@
-import 'package:fitness_tracker/screens/user_information_screen.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:provider/provider.dart';
 import '../models/activity.dart';
+import 'user_information_screen.dart';
 import 'detailed_activity_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,35 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 300, // Set a specific height for the banner
+                aspectRatio: MediaQuery.of(context).size.width / 200, // Set aspect ratio to match screen width and banner height
+                viewportFraction: 1.0, // Ensure each image takes up the full viewport width
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 3),
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                autoPlayCurve: Curves.easeInOut,
+                enlargeCenterPage: true,
+                onPageChanged: (index, reason) {
+                  // Handle page change
+                },
+                scrollDirection: Axis.horizontal,
+              ),
+              items: [
+                // Add your actual image widgets here
+                Image.asset('assets/images/carousel1.jpg', fit: BoxFit.cover),
+                Image.asset('assets/images/carousel2.jpg', fit: BoxFit.cover),
+                // Add more images as needed
+              ],
+            ),
+
+
+
+            const SizedBox(height: 20), // Add some spacing after the carousel
             _buildGroupedActivities(context, 'This Week'),
             _buildGroupedActivities(context, 'This Month'),
             _buildGroupedActivities(context, 'This Year'),
@@ -89,7 +119,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-
   void _navigateToAddActivityScreen(BuildContext context) {
     Navigator.pushNamed(context, '/addActivity');
   }
@@ -98,7 +127,6 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushNamed(context, '/activityChart');
   }
 
-
   void _navigateToHomeScreen(BuildContext context) {
     Navigator.pushNamed(context, '/home');
   }
@@ -106,7 +134,6 @@ class HomeScreen extends StatelessWidget {
   void _navigateToPlanScreen(BuildContext context) {
     Navigator.pushNamed(context, '/plan');
   }
-
 
   Widget _buildGroupedActivities(BuildContext context, String title) {
     final provider = Provider.of<ActivityProvider>(context);
@@ -178,8 +205,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-
-
   int _calculateTotalCalories(List<Activity> activities) {
     return activities.fold<int>(
       0,
@@ -187,14 +212,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-
   void _navigateToDetailedActivityScreen(BuildContext context, String activityType) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => DetailedActivityScreen(activityType: activityType)),
     );
   }
-
 
   Map<String, List<Activity>> _getGroupedActivities(ActivityProvider provider, String title) {
     switch (title) {
@@ -208,7 +231,6 @@ class HomeScreen extends StatelessWidget {
         return {};
     }
   }
-
 
   Duration _calculateTotalDuration(List<Activity> activities) {
     return activities.fold<Duration>(
@@ -257,6 +279,4 @@ class HomeScreen extends StatelessWidget {
         return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
   }
-
-
 }
