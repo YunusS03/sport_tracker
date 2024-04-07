@@ -290,26 +290,51 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     double weightKg = user.weight ?? 70; // Use user's weight or default value
     const double caloriesPerKgPerHour = 1.05; // Example value for calories burned per kg per hour
 
-    // Convert intensity to MET value
-    double met;
+    // MET values for different activity types
+    final Map<String, double> metValues = {
+      'Running': 8.0,
+      'Cycling': 7.0,
+      'Swimming': 7.0,
+      'Walking': 3.5,
+      'Hiking': 6.0,
+      'Yoga': 2.5,
+      'Weightlifting': 3.0,
+      'Pilates': 3.0,
+      'Dancing': 5.0,
+      'Basketball': 6.0,
+      'Soccer': 7.0,
+      'Tennis': 7.0,
+      'Golf': 4.5,
+      'Surfing': 3.5,
+      'Snowboarding': 5.5,
+      'Skateboarding': 4.0,
+      'Rock Climbing': 8.0,
+      'Other': 3.0, // Default MET value for unknown activities
+    };
+
+    // Get MET value for the activity type
+    double baseMet = metValues[activity.type] ?? 3.0; // Default to 3.0 if no matching MET value found
+
+    // Apply intensity multiplier
+    double intensityMultiplier = 1.0;
     switch (activity.intensity) {
       case 1:
-        met = 4.3; // Light intensity
+        intensityMultiplier = 0.8; // Light intensity
         break;
       case 2:
-        met = 6.0; // Moderate intensity
+        intensityMultiplier = 1.0; // Moderate intensity
         break;
       case 3:
-        met = 8.0; // Vigorous intensity
+        intensityMultiplier = 1.2; // Vigorous intensity
         break;
       case 4:
-        met = 10.0; // Very vigorous intensity
+        intensityMultiplier = 1.5; // Very vigorous intensity
         break;
       case 5:
-        met = 12.0; // Extremely vigorous intensity
+        intensityMultiplier = 1.8; // Extremely vigorous intensity
         break;
       default:
-        met = 1.0; // Default to resting metabolic rate
+        intensityMultiplier = 1.0; // Default to moderate intensity
         break;
     }
 
@@ -317,10 +342,11 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     double durationHours = activity.duration.inMinutes / 60.0;
 
     // Calculate calories burned
-    double calories = (caloriesPerKgPerHour * weightKg * met * durationHours).roundToDouble();
+    double calories = (caloriesPerKgPerHour * weightKg * baseMet * intensityMultiplier * durationHours).roundToDouble();
 
     return calories;
   }
+
 
 
 
