@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_tracker/providers/activityProvider.dart';
 import 'package:provider/provider.dart';
+import '../helpers/MotivationalQuotes.dart';
 import '../models/activity.dart';
 import 'user_information_screen.dart';
 import 'detailed_activity_screen.dart';
@@ -38,17 +39,30 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width, // Set width to fill the screen width
-              height: 200, // Set a specific height for the image
-              child: Image.asset(
-                'assets/images/carousel1.jpg',
-                width: double.infinity, // Make the image fill the width of its container
-                fit: BoxFit.fitWidth, // Ensure the image fills the entire container without cropping
-              ),
+            Stack(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  child: Image.asset(
+                    'assets/images/carousel1.jpg',
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+                Positioned.fill(
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: RandomQuoteWidget(), // Add the RandomQuoteWidget
+                ),
+              ],
             ),
-
-            const SizedBox(height: 20), // Add some spacing after the carousel
+            const SizedBox(height: 20),
             _buildGroupedActivities(context, 'This Week'),
             _buildGroupedActivities(context, 'This Month'),
             _buildGroupedActivities(context, 'This Year'),
@@ -84,15 +98,12 @@ class HomeScreen extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-            // Navigate to the Home screen when the Home button is tapped
               _navigateToHomeScreen(context);
               break;
             case 1:
-            // Navigate to the Chart screen when the Charts button is tapped
               _navigateToChartScreen(context);
               break;
             case 2:
-            // Navigate to the Plan screen when the Plan button is tapped
               _navigateToPlanScreen(context);
               break;
           }
@@ -100,7 +111,6 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
   void _navigateToAddActivityScreen(BuildContext context) {
     Navigator.pushNamed(context, '/addActivity');
   }

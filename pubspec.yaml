@@ -55,6 +55,8 @@ dependencies:
 
   path: any
   timezone: ^0.8.0
+  shared_preferences: ^2.2.2
+  csv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,7 @@ flutter:
     - assets/images/carousel1.jpg
     - assets/images/carousel2.jpg
     - assets/images/carousel3.jpg
+    - assets/data/quotes.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
