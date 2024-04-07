@@ -44,10 +44,9 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   @override
   void initState() {
     super.initState();
-    _hoursController.text = '1'; // Default value for hours
+    _hoursController.text = '0'; // Default value for hours
     _minutesController.text = '0'; // Default value for minutes
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,29 +65,26 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   const Icon(Icons.calendar_today_outlined), // Modern date picker icon
                   const SizedBox(width: 10),
                   Text(
-                    'Select Date: ${DateFormat.yMMMd().format(_selectedDate)} ${DateFormat.Hm().format(_selectedDate)}', // Display selected date and time
+                    ' ${DateFormat.yMMMd().format(_selectedDate)} ${DateFormat.Hm().format(_selectedDate)}',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            DropdownButtonFormField(
-              value: _selectedActivityType,
-              onChanged: _onActivityTypeChanged,
-              items: activityTypes.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Row(
-                    children: [
-                      _getActivityIcon(value), // Add icon here
-                      const SizedBox(width: 10), // Adjust spacing between icon and text
-                      Text(value),
-                    ],
-                  ),
-                );
-              }).toList(),
-              decoration: const InputDecoration(labelText: 'Activity Type'),
+            const Text(
+              'Duration:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildDurationButton('+15 min', 15),
+                _buildDurationButton('+30 min', 30),
+                _buildDurationButton('+45 min', 45),
+                _buildDurationButton('+1 H', 60),
+              ],
             ),
             const SizedBox(height: 20),
             Row(
@@ -156,6 +152,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       ),
     );
   }
+
 
   // Function to show date and time picker dialog
   Future<void> _selectDateTime() async {
@@ -264,5 +261,25 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       default:
         return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
     }
+  }
+
+
+// Function to build duration button
+  Widget _buildDurationButton(String label, int minutes) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          final int currentHours = int.tryParse(_hoursController.text) ?? 0;
+          final int currentMinutes = int.tryParse(_minutesController.text) ?? 0;
+          final int totalCurrentMinutes = currentHours * 60 + currentMinutes;
+
+          final int newTotalMinutes = totalCurrentMinutes + minutes;
+
+          _hoursController.text = (newTotalMinutes ~/ 60).toString();
+          _minutesController.text = (newTotalMinutes % 60).toString();
+        });
+      },
+      child: Text(label),
+    );
   }
 }
