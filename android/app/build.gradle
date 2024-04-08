@@ -23,6 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
+    compileSdkVersion 33
     namespace "com.myfluttertracker.fitness_tracker"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
@@ -45,10 +46,11 @@ android {
         applicationId "com.myfluttertracker.fitness_tracker"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 30
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
     }
 
     buildTypes {
