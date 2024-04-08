@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (context) => ActivityProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false, // Remove the debug banner
-        title: 'SportTracker',
+        title: 'Vitality Vault',
         theme: ThemeData(
           // Your theme settings...
         ),

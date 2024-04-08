@@ -15,13 +15,15 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'SportTracker',
+          'Vitality Vault',
           style: TextStyle(
-            fontFamily: 'Segoe UI',
-            fontWeight: FontWeight.bold,
+            fontFamily: 'BebasNeue',
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            letterSpacing: 5.0,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         centerTitle: true,
         actions: [
           IconButton(
