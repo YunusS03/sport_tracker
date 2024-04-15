@@ -16,14 +16,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Biedt de ActivityProvider aan de widget tree
     return ChangeNotifierProvider(
       create: (context) => ActivityProvider(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false, // Remove the debug banner
+        debugShowCheckedModeBanner: false, // Verwijder de debug banner
         title: 'Vitality Vault',
         theme: ThemeData(
-          // Your theme settings...
+          // Uw thema-instellingen...
         ),
+        // Definieer route mappings
         routes: {
           '/addActivity': (context) => const AddActivityScreen(),
           '/activityChart': (context) => const ActivityChartScreen(),
@@ -31,8 +33,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomeScreen(),
           '/plan': (context) => CalendarScreen(),
         },
-        home: const HomeScreen(),
-        // home: CalendarScreen(),
+        home: const HomeScreen(), // Standaard startscherm
       ),
     );
   }

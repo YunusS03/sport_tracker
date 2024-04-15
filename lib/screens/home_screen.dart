@@ -60,14 +60,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned.fill(
-                  child: RandomQuoteWidget(), // Add the RandomQuoteWidget
+                  child: RandomQuoteWidget(), // Voeg de RandomQuoteWidget toe
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            _buildGroupedActivities(context, 'This Week'),
-            _buildGroupedActivities(context, 'This Month'),
-            _buildGroupedActivities(context, 'This Year'),
+            _buildGroupedActivities(context, 'Deze Week'),
+            _buildGroupedActivities(context, 'Deze Maand'),
+            _buildGroupedActivities(context, 'Dit Jaar'),
           ],
         ),
       ),
@@ -86,11 +86,11 @@ class HomeScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
-            label: 'Charts',
+            label: 'Grafieken',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
-            label: 'Plan',
+            label: 'Plannen',
           ),
         ],
         selectedItemColor: Colors.black,
@@ -185,7 +185,7 @@ class HomeScreen extends StatelessWidget {
                     valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                   Text(
-                    '${totalDuration.inHours} hours ${totalDuration.inMinutes.remainder(60)} minutes ($activityCount activities)',
+                    '${totalDuration.inHours} uur ${totalDuration.inMinutes.remainder(60)} minuten ($activityCount activiteiten)',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
@@ -270,7 +270,8 @@ class HomeScreen extends StatelessWidget {
       case 'rock climbing':
         return const Icon(Icons.explore, color: Colors.brown);
       default:
-        return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
+        return const Icon(Icons.help, color: Colors.grey); // Standaard pictogram voor onbekende activiteiten
     }
   }
 }
+

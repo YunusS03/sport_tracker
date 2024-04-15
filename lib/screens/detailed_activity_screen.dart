@@ -5,6 +5,7 @@ import 'package:fitness_tracker/providers/activityProvider.dart';
 import '../models/activity.dart';
 import 'activity_chart_screen.dart';
 
+// GedetailleerdActiviteitenscherm widget, toont alle activiteiten van een bepaald type
 class DetailedActivityScreen extends StatefulWidget {
   final String activityType;
 
@@ -14,14 +15,15 @@ class DetailedActivityScreen extends StatefulWidget {
   _DetailedActivityScreenState createState() => _DetailedActivityScreenState();
 }
 
+// _DetailedActivityScreenState vertegenwoordigt de status van de DetailedActivityScreen widget
 class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
-  bool _ascendingOrder = true; // Default ordering is ascending
+  bool _ascendingOrder = true; // Standaard sorteerorde is oplopend
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.activityType} Activities'),
+        title: Text('${widget.activityType} Activiteiten'),
         actions: [
           _buildOrderByDropdown(),
         ],
@@ -35,16 +37,17 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
     );
   }
 
+  // Bouw de lijst van activiteiten op
   Widget _buildActivityList(BuildContext context, ActivityProvider activityProvider) {
     List<Activity> activities = activityProvider.getActivitiesByType(widget.activityType);
 
     if (activities.isEmpty) {
       return Center(
-        child: Text('No ${widget.activityType} activities available'),
+        child: Text('Geen ${widget.activityType} activiteiten beschikbaar'),
       );
     }
 
-    // Sort activities based on selected order
+    // Sorteer activiteiten op basis van de geselecteerde volgorde
     activities.sort((a, b) => _ascendingOrder ? a.date.compareTo(b.date) : b.date.compareTo(a.date));
 
     return ListView.builder(
@@ -56,6 +59,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
     );
   }
 
+  // Bouw de kaart voor elke activiteit op
   Widget _buildActivityCard(BuildContext context, Activity activity, ActivityProvider activityProvider) {
     String formattedDateTime = DateFormat.yMMMMd().add_Hm().format(activity.date);
     return Padding(
@@ -77,7 +81,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
                 children: [
                   Icon(Icons.timer, color: Theme.of(context).primaryColor),
                   const SizedBox(width: 4),
-                  Text('Duration: ${activity.duration.inMinutes} minutes'),
+                  Text('Duur: ${activity.duration.inMinutes} minuten'),
                 ],
               ),
               const SizedBox(height: 4),
@@ -85,7 +89,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
                 children: [
                   Icon(Icons.fireplace, color: Colors.orange),
                   const SizedBox(width: 4),
-                  Text('Burned Calories: ${activity.calories} kcal', style: TextStyle(color: Colors.grey)),
+                  Text('Verbrande calorieën: ${activity.calories} kcal', style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ],
@@ -93,13 +97,6 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // IconButton(
-              //   icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-              //   onPressed: () {
-              //     // Navigate to edit activity screen
-              //     // You can implement this based on your requirement
-              //   },
-              // ),
               IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
@@ -112,7 +109,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Are you sure you want to delete this activity?',
+                              'Weet je zeker dat je deze activiteit wilt verwijderen?',
                               style: TextStyle(fontSize: 18),
                             ),
                             SizedBox(height: 20),
@@ -121,18 +118,18 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(); // Close the bottom sheet
+                                    Navigator.of(context).pop(); // Sluit het bottom sheet
                                   },
-                                  child: Text('Cancel'),
+                                  child: Text('Annuleren'),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Delete the activity
+                                    // Verwijder de activiteit
                                     activityProvider.removeActivity(activity.id!);
-                                    Navigator.of(context).pop(); // Close the bottom sheet
+                                    Navigator.of(context).pop(); // Sluit het bottom sheet
                                   },
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                                  child: Text('Delete'),
+                                  child: Text('Verwijderen'),
                                 ),
                               ],
                             ),
@@ -151,7 +148,7 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
     );
   }
 
-
+  // Bouw de onderste navigatiebalk op
   Widget _buildBottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(
       items: const [
@@ -161,11 +158,11 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.show_chart),
-          label: 'Charts',
+          label: 'Grafieken',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_today),
-          label: 'Plan',
+          label: 'Plannen',
         ),
       ],
       selectedItemColor: Theme.of(context).primaryColor,
@@ -185,18 +182,19 @@ class _DetailedActivityScreenState extends State<DetailedActivityScreen> {
     );
   }
 
+  // Bouw de dropdown voor het sorteren op
   Widget _buildOrderByDropdown() {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: DropdownButton<String>(
-        value: _ascendingOrder ? 'Ascending' : 'Descending',
+        value: _ascendingOrder ? 'Oplopend' : 'Aflopend',
         icon: const Icon(Icons.sort),
         onChanged: (String? newValue) {
           setState(() {
-            _ascendingOrder = newValue == 'Ascending';
+            _ascendingOrder = newValue == 'Oplopend';
           });
         },
-        items: <String>['Ascending', 'Descending'].map<DropdownMenuItem<String>>((String value) {
+        items: <String>['Oplopend', 'Aflopend'].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),

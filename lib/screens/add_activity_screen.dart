@@ -16,12 +16,12 @@ class AddActivityScreen extends StatefulWidget {
 class _AddActivityScreenState extends State<AddActivityScreen> {
   final TextEditingController _hoursController = TextEditingController();
   final TextEditingController _minutesController = TextEditingController();
-  int _selectedIntensity = 1; // Default intensity
+  int _selectedIntensity = 1; // Standaardintensiteit
 
   DateTime _selectedDate = DateTime.now();
-  String _selectedActivityType = 'Running'; // Default activity type
+  String _selectedActivityType = 'Running'; // Standaardactiviteitstype
 
-  // List of predefined activity types
+  // Lijst met vooraf gedefinieerde activiteitstypes
   final List<String> activityTypes = [
     'Running',
     'Cycling',
@@ -46,15 +46,15 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   @override
   void initState() {
     super.initState();
-    _hoursController.text = '0'; // Default value for hours
-    _minutesController.text = '0'; // Default value for minutes
+    _hoursController.text = '0'; // Standaardwaarde voor uren
+    _minutesController.text = '0'; // Standaardwaarde voor minuten
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Activity'),
+        title: const Text('Add New Activity'), // Titel van de app-balk
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -62,30 +62,30 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: _selectDateTime,
+              onTap: _selectDateTime, // Functie om datum en tijd te selecteren
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_today_outlined), // Modern date picker icon
+                  const Icon(Icons.calendar_today_outlined), // Modern pictogram voor datumkiezer
                   const SizedBox(width: 10),
                   Text(
-                    ' ${DateFormat.yMMMd().format(_selectedDate)} ${DateFormat.Hm().format(_selectedDate)}',
+                    ' ${DateFormat.yMMMd().format(_selectedDate)} ${DateFormat.Hm().format(_selectedDate)}', // Weergave van geselecteerde datum en tijd
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            _buildActivityTypeDropdown(),
+            _buildActivityTypeDropdown(), // Bouw het dropdown-menu voor activiteitstype
             const SizedBox(height: 20),
             const Text(
-              'Duration:',
+              'Duration:', // Duurtekstlabel
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildDurationButton('+15 min', 15),
+                _buildDurationButton('+15 min', 15), // Knoppen voor het toevoegen van tijdsduur
                 _buildDurationButton('+30 min', 30),
                 _buildDurationButton('+45 min', 45),
                 _buildDurationButton('+1 H', 60),
@@ -97,7 +97,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 Expanded(
                   child: TextFormField(
                     controller: _hoursController,
-                    decoration: const InputDecoration(labelText: 'Hours'),
+                    decoration: const InputDecoration(labelText: 'Hours'), // Tekstveld voor uren
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -105,7 +105,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 Expanded(
                   child: TextFormField(
                     controller: _minutesController,
-                    decoration: const InputDecoration(labelText: 'Minutes'),
+                    decoration: const InputDecoration(labelText: 'Minutes'), // Tekstveld voor minuten
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -113,7 +113,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Intensity:',
+              'Intensity:', // Tekstlabel voor intensiteit
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
@@ -124,7 +124,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     (index) => GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedIntensity = index + 1;
+                      _selectedIntensity = index + 1; // Update de geselecteerde intensiteit
                     });
                   },
                   child: Container(
@@ -137,7 +137,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        '${index + 1}',
+                        '${index + 1}', // Toon het intensiteitsniveau
                         style: TextStyle(
                           color: _selectedIntensity == index + 1 ? Colors.white : Colors.black,
                           fontWeight: _selectedIntensity == index + 1 ? FontWeight.bold : FontWeight.normal,
@@ -150,8 +150,8 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _saveActivity,
-              child: const Text('Save'),
+              onPressed: _saveActivity, // Functie om de activiteit op te slaan
+              child: const Text('Save'), // Tekst op de knop
             ),
           ],
         ),
@@ -159,7 +159,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     );
   }
 
-  // Function to show date and time picker dialog
+  // Functie om de datum en tijd te selecteren
   Future<void> _selectDateTime() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -170,11 +170,11 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: const ColorScheme.light().copyWith(
-              primary: Colors.blue, // Header background color
+              primary: Colors.blue, // Hoofdkleur van de app
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.blue, // Button text color
+                foregroundColor: Colors.blue, // Tekstkleur van de knop
               ),
             ),
           ),
@@ -196,19 +196,19 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
           pickedTime.minute,
         );
         setState(() {
-          _selectedDate = selectedDateTime;
+          _selectedDate = selectedDateTime; // Update de geselecteerde datum en tijd
         });
       }
     }
   }
 
-  // Function to build activity type dropdown
+  // Functie om het dropdown-menu voor activiteitstype te bouwen
   Widget _buildActivityTypeDropdown() {
     return DropdownButtonFormField<String>(
       value: _selectedActivityType,
       onChanged: (value) {
         setState(() {
-          _selectedActivityType = value!;
+          _selectedActivityType = value!; // Update het geselecteerde activiteitstype
         });
       },
       items: activityTypes.map((type) {
@@ -216,21 +216,21 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
           value: type,
           child: Row(
             children: [
-              _getActivityIcon(type),
+              _getActivityIcon(type), // Pictogram voor het activiteitstype
               const SizedBox(width: 10),
-              Text(type),
+              Text(type), // Naam van het activiteitstype
             ],
           ),
         );
       }).toList(),
       decoration: InputDecoration(
-        labelText: 'Activity Type',
-        border: OutlineInputBorder(),
+        labelText: 'Activity Type', // Label voor het dropdown-menu
+        border: OutlineInputBorder(), // Randstijl voor het dropdown-menu
       ),
     );
   }
 
-  // Function to save activity
+  // Functie om de activiteit op te slaan
   void _saveActivity() {
     final activityProvider = Provider.of<ActivityProvider>(context, listen: false);
     final int hours = int.tryParse(_hoursController.text) ?? 0;
@@ -242,14 +242,14 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Duration cannot be 0. Please enter a valid duration.'),
+            title: const Text('Error'), // Foutmeldingstitel
+            content: const Text('Duration cannot be 0. Please enter a valid duration.'), // Foutmeldingstekst
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: const Text('OK'), // Tekst op de knop
               ),
             ],
           );
@@ -258,40 +258,38 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       return;
     }
 
-    // Calculate calories burned
+    // Bereken verbrande calorieën
     double calories = calculateCalories(Activity(
-      date: _selectedDate, // Pass the selected date
-      type: _selectedActivityType,
-      duration: Duration(minutes: totalMinutes),
-      intensity: _selectedIntensity,
-      calories: 0
+        date: _selectedDate, // Geef de geselecteerde datum door
+        type: _selectedActivityType,
+        duration: Duration(minutes: totalMinutes),
+        intensity: _selectedIntensity,
+        calories: 0
     ));
 
-
-
+    // Voeg de activiteit toe aan de provider
     activityProvider.addActivity(Activity(
-      date: _selectedDate, // Pass the selected date
+      date: _selectedDate, // Geef de geselecteerde datum door
       type: _selectedActivityType,
       duration: Duration(minutes: totalMinutes),
       intensity: _selectedIntensity,
-      calories: calories.toInt(), // Pass the calculated calories
+      calories: calories.toInt(), // Geef de berekende calorieën door
     ));
 
-
-    Navigator.pop(context); // Go back to HomeScreen
+    Navigator.pop(context); // Ga terug naar het startscherm
   }
 
-
+  // Functie om calorieën te berekenen op basis van activiteit
   double calculateCalories(Activity activity) {
-    // Retrieve the user object from the ActivityProvider
+    // Haal het gebruikersobject op uit de ActivityProvider
     User? user = Provider.of<ActivityProvider>(context, listen: false).getUser();
 
-    // Constants
-    double weightKg = user?.weight ?? 70; // Use user's weight or default value
+    // Constanten
+    double weightKg = user?.weight ?? 70; // Gebruik het gewicht van de gebruiker of een standaardwaarde
 
-    const double caloriesPerKgPerHour = 1.05; // Example value for calories burned per kg per hour
+    const double caloriesPerKgPerHour = 1.05; // Voorbeeldwaarde voor verbrande calorieën per kg per uur
 
-    // MET values for different activity types
+    // MET-waarden voor verschillende activiteitstypes
     final Map<String, double> metValues = {
       'Running': 8.0,
       'Cycling': 7.0,
@@ -310,49 +308,45 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       'Snowboarding': 5.5,
       'Skateboarding': 4.0,
       'Rock Climbing': 8.0,
-      'Other': 3.0, // Default MET value for unknown activities
+      'Other': 3.0, // Standaard MET-waarde voor onbekende activiteiten
     };
 
-    // Get MET value for the activity type
-    double baseMet = metValues[activity.type] ?? 3.0; // Default to 3.0 if no matching MET value found
+    // Haal de MET-waarde op voor het activiteitstype
+    double baseMet = metValues[activity.type] ?? 3.0; // Standaard naar 3.0 als er geen overeenkomende MET-waarde is gevonden
 
-    // Apply intensity multiplier
+    // Pas de intensiteitsvermenigvuldiger toe
     double intensityMultiplier = 1.0;
     switch (activity.intensity) {
       case 1:
-        intensityMultiplier = 0.8; // Light intensity
+        intensityMultiplier = 0.8; // Licht intensiteitsniveau
         break;
       case 2:
-        intensityMultiplier = 1.0; // Moderate intensity
+        intensityMultiplier = 1.0; // Gemiddeld intensiteitsniveau
         break;
       case 3:
-        intensityMultiplier = 1.2; // Vigorous intensity
+        intensityMultiplier = 1.2; // Krachtig intensiteitsniveau
         break;
       case 4:
-        intensityMultiplier = 1.5; // Very vigorous intensity
-        intensityMultiplier = 1.5; // Very vigorous intensity
+        intensityMultiplier = 1.5; // Zeer krachtig intensiteitsniveau
         break;
       case 5:
-        intensityMultiplier = 1.8; // Extremely vigorous intensity
+        intensityMultiplier = 1.8; // Uiterst krachtig intensiteitsniveau
         break;
       default:
-        intensityMultiplier = 1.0; // Default to moderate intensity
+        intensityMultiplier = 1.0; // Standaard naar gemiddeld intensiteitsniveau
         break;
     }
 
-    // Calculate duration in hours
+    // Bereken de duur in uren
     double durationHours = activity.duration.inMinutes / 60.0;
 
-    // Calculate calories burned
+    // Bereken verbrande calorieën
     double calories = (caloriesPerKgPerHour * weightKg * baseMet * intensityMultiplier * durationHours).roundToDouble();
 
     return calories;
   }
 
-
-
-
-  // Function to build duration button
+  // Functie om een knop voor de tijdsduur te bouwen
   Widget _buildDurationButton(String label, int minutes) {
     return ElevatedButton(
       onPressed: () {
@@ -367,11 +361,11 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
           _minutesController.text = (newTotalMinutes % 60).toString();
         });
       },
-      child: Text(label),
+      child: Text(label), // Tekst op de knop
     );
   }
 
-  // Function to get activity icon based on activity type
+  // Functie om het pictogram voor de activiteit op te halen op basis van het activiteitstype
   Icon _getActivityIcon(String activityType) {
     switch (activityType.toLowerCase()) {
       case 'running':
@@ -409,7 +403,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
       case 'rock climbing':
         return const Icon(Icons.explore, color: Colors.brown);
       default:
-        return const Icon(Icons.help, color: Colors.grey); // Default icon for unknown activities
+        return const Icon(Icons.help, color: Colors.grey); // Standaardpictogram voor onbekende activiteiten
     }
   }
 }
